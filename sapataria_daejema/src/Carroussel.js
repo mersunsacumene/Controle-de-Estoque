@@ -1,40 +1,43 @@
 import React from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Paper, Button, Box } from '@mui/material';
+import onepng from './static/1.png';
+import twopng from './static/2.png';
+import threepng from './static/3.png';
 
 const items = [
   {
-    image: '/2.png',
+    image: twopng,
     title: 'Imagem 2',
   },
   {
-    image: '/1.png',
+    image: onepng,
     title: 'Imagem 1',
   },
   {
-    image: '/3.png ',
+    image: threepng,
     title: 'Imagem 3',
   },  {
-    image: '/2.png',
+    image: twopng,
     title: 'Imagem 2',
   },
   {
-    image: '/1.png',
+    image: onepng,
     title: 'Imagem 1',
   },
   {
-    image: '/3.png ',
+    image: threepng,
     title: 'Imagem 3',
   },  {
-    image: '/2.png',
+    image: twopng,
     title: 'Imagem 2',
   },
   {
-    image: '/1.png',
+    image: onepng,
     title: 'Imagem 1',
   },
   {
-    image: '/3.png ',
+    image: threepng,
     title: 'Imagem 3',
   },
 ];
@@ -79,6 +82,7 @@ function CarouselItem({ item }) {
         sx={{
           width: '100%',
           height: 'auto',
+          marginTop: '250px',
         }}
       />
       <Box sx={{ padding: 2, textAlign: 'center' }}>

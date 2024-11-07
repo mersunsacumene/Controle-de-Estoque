@@ -1,6 +1,7 @@
 import React from 'react';
-import { AppBar, Toolbar, Button, Box, Typography, createTheme, ThemeProvider } from '@mui/material';
+import { AppBar, Toolbar, Button, Box, createTheme, ThemeProvider } from '@mui/material';
 import { Link } from 'react-router-dom';
+import threepng from './static/3.png'
 
 const theme = createTheme({
   palette: {
@@ -20,7 +21,7 @@ function Navbar() {
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box sx={{ flexGrow: 0 }}>
           <a href='/'><img
-            src="./3.png" 
+            src={threepng}
             alt="Logo"
             style={{ height: 80 }}
           /></a>
