@@ -5,33 +5,33 @@ import { Paper, Button, Box } from '@mui/material';
 const items = [
   {
     image: '/2.png',
-    title: 'Imagem 1',
+    title: 'Imagem 2',
   },
   {
     image: '/1.png',
-    title: 'Imagem 2',
+    title: 'Imagem 1',
   },
   {
     image: '/3.png ',
     title: 'Imagem 3',
   },  {
     image: '/2.png',
-    title: 'Imagem 1',
+    title: 'Imagem 2',
   },
   {
     image: '/1.png',
-    title: 'Imagem 2',
+    title: 'Imagem 1',
   },
   {
     image: '/3.png ',
     title: 'Imagem 3',
   },  {
     image: '/2.png',
-    title: 'Imagem 1',
+    title: 'Imagem 2',
   },
   {
     image: '/1.png',
-    title: 'Imagem 2',
+    title: 'Imagem 1',
   },
   {
     image: '/3.png ',

@@ -16,7 +16,7 @@ const theme = createTheme({
 function Navbar() {
   return (
     <ThemeProvider theme={theme}>
-    <AppBar position="sticky" sx={{ backgroundColor: 'black', marginTop: -1}}>
+    <AppBar position="fixed" sx={{ backgroundColor: 'black', marginTop: -1}}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Box sx={{ flexGrow: 0 }}>
           <a href='/'><img
