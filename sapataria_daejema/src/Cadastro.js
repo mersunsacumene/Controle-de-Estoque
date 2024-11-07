@@ -26,8 +26,8 @@ function Cadastro() {
     confirmacaoSenha: "",
   });
   useEffect(() => {
-    document.body.style.backgroundImage = "url('favicon.ico')";
-    document.body.style.backgroundSize = 'cover, cover, cover, cover';
+    document.body.style.backgroundImage = "url('favicon2.png')";
+    document.body.style.backgroundSize = 'cover';
     document.body.style.backgroundPosition = 'center';
     document.body.style.backgroundRepeat = 'no-repeat';
     document.body.style.backgroundAttachment = 'fixed';
@@ -78,7 +78,6 @@ function Cadastro() {
     <Container
       maxWidth="sm"
       sx={{
-        bgcolor: "transparent",
         marginTop: "2%",
         borderRadius: "12px",
         padding: "16px",
@@ -89,7 +88,7 @@ function Cadastro() {
         onSubmit={handleSubmit}
         sx={{
           mt: 4,
-          bgcolor: "rgba(255, 255, 255, 0.8)",
+          bgcolor: "#fff",
           borderRadius: "8px",
           padding: 3,
         }}
