@@ -1,9 +1,10 @@
 import React from 'react';
+import Carroussel from './Carroussel';
 
 function Home() {
     return (
       <div>
-        <img src="/1.png" alt="Imagem" />
+      <Carroussel />
       </div>
     );
   }
