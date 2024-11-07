@@ -78,7 +78,7 @@ function Cadastro() {
     <Container
       maxWidth="sm"
       sx={{
-        marginTop: "2%",
+        marginTop: "5%",
         borderRadius: "12px",
         padding: "16px",
       }}

@@ -41,7 +41,8 @@ function Login() {
         direction="column"
         alignItems="center"
         justifyContent="center"
-        style={{ minHeight: "80vh" }}
+        style={{ minHeight: "80vh",
+          marginTop: "6%" }}
       >
         <Grid item xs={12} sm={8} md={4}>
           <Paper
