@@ -4,10 +4,10 @@ import { TextField, Button, Typography, Container, Box, ThemeProvider, createThe
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#FFFFFF',
     },
     secondary: {
-      main: '#c3062c',
+      main: '#02FF39',
     },
   },
 });
