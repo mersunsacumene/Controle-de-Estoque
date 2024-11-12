@@ -6,10 +6,10 @@ import threepng from './static/3.png'
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#FFFFFF',
     },
     secondary: {
-      main: '#c3062c',
+      main: '#02FF39',
     },
   },
 });
@@ -29,7 +29,7 @@ function Navbar() {
 
         <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
           <Button color="secondary" component={Link} to="/"><h2>Home</h2></Button>
-          <Button color="secondary" component={Link} to="/produtos"><h2>Produtos</h2></Button>
+          <Button color="secondary" component={Link} to="/produtos"><h2>Calçados</h2></Button>
         </Box>
 
         <Box>

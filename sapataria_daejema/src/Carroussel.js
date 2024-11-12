@@ -1,6 +1,6 @@
 import React from 'react';
 import Carousel from 'react-material-ui-carousel';
-import { Paper, Button, Box } from '@mui/material';
+import { Paper, Box } from '@mui/material';
 import onepng from './static/1.png';
 import twopng from './static/2.png';
 import threepng from './static/3.png';
