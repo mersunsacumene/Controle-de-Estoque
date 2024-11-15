@@ -5,8 +5,7 @@ import {
   Typography,
   Paper,
   createTheme,
-  ThemeProvider,
-  Grid,
+  ThemeProvider, Grid2,
 } from "@mui/material";
 
 const theme = createTheme({
@@ -20,7 +19,7 @@ const theme = createTheme({
   },
 });
 
-function Login() {
+function Login(){
   useEffect(() => {
     document.body.style.backgroundImage = "url('favicon2.png')";
     document.body.style.backgroundSize = "cover";
@@ -35,7 +34,7 @@ function Login() {
   }, []);
   return (
     <ThemeProvider theme={theme}>
-      <Grid
+      <Grid2
         container
         spacing={0}
         direction="column"
@@ -44,7 +43,7 @@ function Login() {
         style={{ minHeight: "80vh",
           marginTop: "6%" }}
       >
-        <Grid item xs={12} sm={8} md={4}>
+        <Grid2 item xs={12} sm={8} md={4}>
           <Paper
             elevation={3}
             style={{ padding: "20px"}}
@@ -88,8 +87,8 @@ function Login() {
               </Button>
             </form>
           </Paper>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </ThemeProvider>
   );
 }
