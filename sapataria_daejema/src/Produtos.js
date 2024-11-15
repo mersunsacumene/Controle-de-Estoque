@@ -1,27 +1,19 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import {Box, Grid2} from "@mui/material";
-import {  Card, CardContent, Typography, Button, Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, Button, Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import {  theme } from "./static/Utils";
+import { ThemeProvider} from '@mui/material/styles';
 import one from './static/image1.png'
+import {useBackground} from "./static/UseBackGround";
 
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#FFFFFF',
-        },
-        secondary: {
-            main: '#02FF39',
-        },
-    },
-});
 const produtos = new Array(200).fill({
     nome: 'Sandália de Moisés',
     valor: '29,99',
     imagem: one,
 });
-
 function Produtos() {
+    useBackground('favicon2.png');
 
     const [drawerOpen, setDrawerOpen] = useState(false);
 
