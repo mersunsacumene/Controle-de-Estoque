@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {AppBar, Toolbar, Modal, Button, Box, ThemeProvider, Typography} from '@mui/material';
 import { Link } from 'react-router-dom';
-import threepng from './static/3.png'
+import threepng from './static/image3.png'
 import {  theme } from "./static/Utils";
 
 

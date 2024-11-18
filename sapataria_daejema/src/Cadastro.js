@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Container, Box, ThemeProvider, IconButton, InputAdornment } from "@mui/material";
 import { theme } from "./static/Utils";
-import { mockCadastroUsuario } from "./static/MockService";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {useBackground} from "./static/UseBackGround"; // Ícones para mostrar/esconder a senha
+import axios from 'axios';
+
 
 function Cadastro() {
     useBackground('favicon2.png');
@@ -23,8 +24,8 @@ function Cadastro() {
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormValues({ ...formValues, [name]: value });
+        const {name, value} = e.target;
+        setFormValues({...formValues, [name]: value});
     };
 
     const validateForm = () => {
@@ -54,20 +55,19 @@ function Cadastro() {
         return Object.keys(errors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            const result = mockCadastroUsuario({
-                nome: formValues.nome,
-                email: formValues.email,
-                senha: formValues.senha,
-            });
-            setTimeout(() => {
-                navigate("/login");
-            }, 2000);
-
-            if (result.success) {
-                setMessage("Cadastro realizado com sucesso!");
+            try {
+                console.log('posting', formValues)
+                const response = await axios.post("http://127.0.0.1:5000/usuario/cadastro", {
+                    email: formValues.email,
+                    password: formValues.senha,
+                    primeiro_nome: formValues.nome.split(" ")[0],
+                    ultimo_nome: formValues.nome.split(" ").slice(1).join(" "),
+                }, {headers: {"Content-Type": "application/json"}});
+                console.log('got', response.status, response.data)
+                setMessage(response.data.message);
                 setFormValues({
                     nome: "",
                     email: "",
@@ -76,8 +76,11 @@ function Cadastro() {
                     confirmacaoSenha: "",
                 });
                 setFormErrors({});
-            } else {
-                setMessage(result.message);
+                navigate("/")
+            } catch (error) {
+                console.log('got error', error.message, error.response)
+                const errorMsg = error.response?.data?.error || "Erro desconhecido.";
+                setMessage(errorMsg);
             }
         }
     };

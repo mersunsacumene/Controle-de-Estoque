@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import {TextField, Button, Typography, Paper, ThemeProvider, Grid, InputAdornment, IconButton} from "@mui/material";
-import { mockLogin } from "./static/MockService";
+import { useNavigate } from "react-router-dom";
 import { theme } from "./static/Utils";
 import {useBackground} from "./static/UseBackGround";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
+import axios from "axios";
 
 function Login() {
   useBackground('favicon2.png');
@@ -14,6 +15,7 @@ function Login() {
   const [formErrors, setFormErrors] = useState({});
   const [loginMessage, setLoginMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -36,16 +38,31 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const result = mockLogin(formValues.email, formValues.password);
+      try{
+        const response = await axios.post("http://127.0.0.1:5000/usuario/login", {
+          email: formValues.email,
+          password: formValues.password,
+        },{headers: {"Content-Type": "application/json"}});
+        console.log(response.data)
+        setLoginMessage(response.data.message);
 
-      if (result.success) {
-        setLoginMessage("Login realizado com sucesso!");
-        setFormErrors({});
-      } else {
-        setLoginMessage(result.message || "Falha ao realizar login");
+        if (response.data.token) {
+          localStorage.setItem("authToken", response.data.token);
+        }
+
+        setFormValues({
+          email: "",
+          password: "",
+        });
+        navigate("/")
+      }catch (error) {
+        console.log('got error', error.message, error.response)
+        const errorMsg = error.response?.data?.error || "Erro desconhecido.";
+        setLoginMessage(errorMsg);
       }
-    }
+      }
   };
+
   return (
       <ThemeProvider theme={theme}>
         <Grid
