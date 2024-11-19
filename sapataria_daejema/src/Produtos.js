@@ -77,7 +77,7 @@ function Produtos() {
                             }}
                         >
                             <CardContent style={{ textAlign: 'center' }}>
-                                <Typography component="img" src={`http://localhost:5000${produto.imagem_url}`} alt={produto.nome_prod} sx={{ width: '20%', objectFit: 'cover' }} />
+                                <Typography component="img" src={`http://localhost:5000${produto.imagem_url}`} alt={produto.nome_prod} sx={{ width: '100%', objectFit: 'cover' }} />
                                 <Typography variant="h5" style={{ fontWeight: 'bold' }}>
                                     {produto.nome_prod}
                                 </Typography>
