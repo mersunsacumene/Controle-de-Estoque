@@ -5,7 +5,6 @@ import threepng from './static/image3.png'
 import {  theme } from "./static/Utils";
 
 
-
 function Navbar() {
   const [open, setOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(()=>{
@@ -14,11 +13,9 @@ function Navbar() {
 
     const checkAuthentication = () => {
         const token = localStorage.getItem('authToken');
-        setIsAuthenticated(!!token); // Atualiza o estado com base na presença do token
+        setIsAuthenticated(!!token);
     };
     useEffect(() => {
-         // Checa autenticação no início
-        // Listener para mudanças no localStorage (em caso de logout/login em outro local)
         const handleStorageChange = () => {
             checkAuthentication();
         };
@@ -33,8 +30,8 @@ function Navbar() {
 
     const logout = () => {
         localStorage.removeItem('authToken');
-        setIsAuthenticated(false); // Atualiza o estado local
-        window.dispatchEvent(new Event('storage')); // Dispara o evento para outros listeners
+        setIsAuthenticated(false);
+        window.dispatchEvent(new Event('storage'));
     };
 
     const renderAuthButtons = () => {

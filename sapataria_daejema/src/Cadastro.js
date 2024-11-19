@@ -153,11 +153,11 @@ function Cadastro() {
                         error={!!formErrors.confirmaEmail}
                         helperText={formErrors.confirmaEmail}
                     />
-                    {/* Senha com ícone de visibilidade */}
+
                     <TextField
                         label="Senha:"
                         name="senha"
-                        type={showSenha ? "text" : "password"} // Alterna entre 'text' e 'password'
+                        type={showSenha ? "text" : "password"}
                         fullWidth
                         color="secondary"
                         margin="normal"

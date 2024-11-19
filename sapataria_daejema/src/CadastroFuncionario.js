@@ -20,8 +20,8 @@ function CadastroFuncionario() {
 
     const [formErrors, setFormErrors] = useState({});
     const [message, setMessage] = useState("");
-    const [showSenha, setShowSenha] = useState(false); // Estado para controlar a visibilidade da senha
-    const [showConfirmSenha, setShowConfirmSenha] = useState(false); // Estado para controlar a visibilidade da confirmação de senha
+    const [showSenha, setShowSenha] = useState(false);
+    const [showConfirmSenha, setShowConfirmSenha] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -180,7 +180,6 @@ function CadastroFuncionario() {
                         helperText={formErrors.confirmaEmail}
                     />
 
-                    {/* Campo de Senha com opção de visibilidade */}
                     <TextField
                         label="Senha"
                         name="senha"
@@ -203,11 +202,10 @@ function CadastroFuncionario() {
                         }}
                     />
 
-                    {/* Campo de Confirmação de Senha com opção de visibilidade */}
                     <TextField
                         label="Confirmação de Senha"
                         name="confirmacaoSenha"
-                        type={showConfirmSenha ? "text" : "password"} // Alterna entre 'text' e 'password'
+                        type={showConfirmSenha ? "text" : "password"}
                         fullWidth
                         color="secondary"
                         margin="normal"

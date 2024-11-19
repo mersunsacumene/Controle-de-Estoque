@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Grid2} from "@mui/material";
+import {Box, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, TextField} from "@mui/material";
 import { Card, CardContent, Typography, Button, Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import {  theme } from "./static/Utils";
@@ -12,6 +12,7 @@ function Produtos() {
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [produtos, setProdutos] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
 
     const fetchProducts = async () => {
 
@@ -33,11 +34,16 @@ function Produtos() {
     const toggleDrawer = (open) => {
         setDrawerOpen(open);
     };
+    const handleOpenModal = () => setOpenModal(true);
+    const handleCloseModal = () => setOpenModal(false);
+    const handleSaveProduct = async () => {
+    };
     return (
         <ThemeProvider theme={theme}>
             <IconButton onClick={() => toggleDrawer(true)} style={{ position: 'fixed', marginTop: '90px', left: '30px', cursor: 'pointer' }}>
                 <MenuIcon /> <label>Menu</label>
             </IconButton>
+
             <Drawer
                 anchor="left"
                 open={drawerOpen}
@@ -47,11 +53,14 @@ function Produtos() {
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
                         width: 280,
+                        height:780,
+                        display:'flex',
                         marginTop: '65px',
                         backgroundColor: "solid",
                         color:"black",
                     }, }}
             >
+
                 <List style={{margin:"50px 30px"}}>
                     <ListItem button>
                         <ListItemText primary="Tenis Futsal" />
@@ -63,9 +72,76 @@ function Produtos() {
                         <ListItemText primary="Sapato Social" />
                     </ListItem>
                 </List>
+                <Box style={{marginTop: '120%'}}>
+                    <Button
+                        style={{
+                            background: '#FF8000',
+                            color: 'black',
+                            border: '2px solid black',
+                            borderRadius: '99px',
+                            width: 'max-content',
+                            margin:"30px",
+                        }}
+                        onClick={handleOpenModal}
+                    >
+                        Adicionar Mercadoria
+                    </Button>
+                </Box>
             </Drawer>
+            <Dialog open={openModal} onClose={handleCloseModal}>
+                <DialogTitle>Cadastrar Nova Mercadoria</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="CNPJ:"
+                        fullWidth
+                        margin="normal"
+                        variant="outlined"
+                    />
+                    <TextField
+                        label="Nome do Produto:"
+                        name="nomeProduto"
+                        fullWidth
+                        margin="normal"
+                        variant="outlined"
+                    />
+                    <TextField
+                        label="Preço Unitário:"
+                        name="precoUnitario"
+                        fullWidth
+                        margin="normal"
+                        variant="outlined"
+                    />
+                    <TextField
+                        label="Lote:"
+                        fullWidth
+                        margin="normal"
+                        variant="outlined"
+                    />
+                    <TextField
+                        label="URL da Imagem"
+                        name="urlImagem"
+                        fullWidth
+                        margin="normal"
+                        variant="outlined"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModal}
+                            color="secondary"
+                            variant="contained">
+                        Cancelar
+                    </Button>
+                    <Button
+                        onClick={() => {handleCloseModal();}}
+                        color="secundary"
+                        variant="contained"
+                    >
+                        Salvar
+                    </Button>
+                </DialogActions>
+            </Dialog>
 
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <Grid2 container spacing={2} width= "80%" >
                 {produtos.map((produto, index) => (
                     <Grid2 item xs={12} sm={6} md={3} key={index}>

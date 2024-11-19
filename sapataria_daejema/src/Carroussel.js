@@ -56,9 +56,9 @@ function Carroussel() {
 function ProdutoGrid({ produtos }) {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-            <Grid2 container spacing={2} sx={{ width: "70%" }}>
+            <Grid2 container spacing={2} sx={{ width: "40%" }}>
                 {produtos.map((produto, index) => (
-                    <Grid2 item xs={12} sm={6} md={3} key={index}>
+                    <Grid2 item xs={12} sm={6} md={3} key={index} >
                         <Card
                             sx={{
                                 marginTop: '120px',
@@ -76,7 +76,6 @@ function ProdutoGrid({ produtos }) {
                                     component="img"
                                     src={produto.imagem}
                                     alt={produto.nome}
-                                    sx={{ maxWidth: '100%', height: 'auto', marginBottom: 2 }}
                                 />
                                 <Typography variant="h5" style={{ fontWeight: 'bold' }}>
                                     {produto.nome}
@@ -105,7 +104,7 @@ function ProdutoGrid({ produtos }) {
 }
 function CarouselProduto({ produtos }) {
     return (
-        <Box style={{ maxHeight: '100vh' }}>
+        <Box style={{ maxHeight: 'min-content' }}>
             {Array(3).fill(0).map((_, index) => (
                 <ProdutoGrid key={index} produtos={produtos} />
             ))}
