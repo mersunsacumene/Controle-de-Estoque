@@ -45,16 +45,17 @@ function Login() {
         },{headers: {"Content-Type": "application/json"}});
         console.log(response.data)
         setLoginMessage(response.data.message);
-
         if (response.data.token) {
           localStorage.setItem("authToken", response.data.token);
+
+          window.dispatchEvent(new Event('storage'));
         }
 
         setFormValues({
           email: "",
           password: "",
         });
-        navigate("/")
+        navigate("/");
       }catch (error) {
         console.log('got error', error.message, error.response)
         const errorMsg = error.response?.data?.error || "Erro desconhecido.";

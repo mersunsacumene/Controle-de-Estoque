@@ -1,21 +1,34 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Box, Grid2} from "@mui/material";
 import { Card, CardContent, Typography, Button, Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import {  theme } from "./static/Utils";
 import { ThemeProvider} from '@mui/material/styles';
-import one from './static/image1.png'
 import {useBackground} from "./static/UseBackGround";
+import axios from 'axios';
 
-const produtos = new Array(200).fill({
-    nome: 'Sandália de Moisés',
-    valor: '29,99',
-    imagem: one,
-});
 function Produtos() {
     useBackground('favicon2.png');
 
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [produtos, setProdutos] = useState([]);
+
+    const fetchProducts = async () => {
+
+        try{
+        const response = await axios.get('http://localhost:5000/produto/produtos',{
+        headers:{"Content-Type": "application/json"}
+        })
+        console.log(response.data)
+        setProdutos(response.data);
+    }catch (erro){
+            console.log("Erro ao carregar os produtos: ",erro);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    },[]);
 
     const toggleDrawer = (open) => {
         setDrawerOpen(open);
@@ -64,12 +77,12 @@ function Produtos() {
                             }}
                         >
                             <CardContent style={{ textAlign: 'center' }}>
-                                <Typography component="img" src={produto.imagem} alt="To Vivendo" />
+                                <Typography component="img" src={`http://localhost:5000${produto.imagem_url}`} alt={produto.nome_prod} sx={{ width: '20%', objectFit: 'cover' }} />
                                 <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                    {produto.nome}
+                                    {produto.nome_prod}
                                 </Typography>
                                 <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                    Valor: {produto.valor}
+                                    Valor Unitário: R${produto.preco_unit}
                                 </Typography>
                                 <Button
                                     style={{

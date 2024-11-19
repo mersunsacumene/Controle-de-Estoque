@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {AppBar, Toolbar, Modal, Button, Box, ThemeProvider, Typography} from '@mui/material';
 import { Link } from 'react-router-dom';
 import threepng from './static/image3.png'
@@ -8,9 +8,56 @@ import {  theme } from "./static/Utils";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(()=>{
+      return !!localStorage.getItem('authToken');
+  });
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+    const checkAuthentication = () => {
+        const token = localStorage.getItem('authToken');
+        setIsAuthenticated(!!token); // Atualiza o estado com base na presença do token
+    };
+    useEffect(() => {
+         // Checa autenticação no início
+        // Listener para mudanças no localStorage (em caso de logout/login em outro local)
+        const handleStorageChange = () => {
+            checkAuthentication();
+        };
+        window.addEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const logout = () => {
+        localStorage.removeItem('authToken');
+        setIsAuthenticated(false); // Atualiza o estado local
+        window.dispatchEvent(new Event('storage')); // Dispara o evento para outros listeners
+    };
+
+    const renderAuthButtons = () => {
+        if (!isAuthenticated) {
+            return (
+                <Box>
+                    <Button color="secondary" sx={{marginRight: 2}} onClick={handleOpen}>
+                        <Typography variant="h6">Cadastro</Typography>
+                    </Button>
+                    <Button color="secondary" component={Link} to="/login">
+                        <Typography variant="h6">Login</Typography>
+                    </Button>
+                </Box>
+            );
+        }
+        return  (
+            <Box>
+            <Button color="secondary" sx={{marginRight: 2}} onClick={logout}>
+                <Typography variant="h6">Sair</Typography>
+            </Button>
+            </Box>
+                )
+    }
 
   return (
       <ThemeProvider theme={theme}>
@@ -24,11 +71,7 @@ function Navbar() {
               <Button color="secondary" component={Link} to="/"><h2>Home</h2></Button>
               <Button color="secondary" component={Link} to="/produtos"><h2>Calçados</h2></Button>
             </Box>
-
-            <Box>
-              <Button color="secondary" sx={{ marginRight: 2 }} onClick={handleOpen}><h3>Cadastro</h3></Button>
-              <Button color="secondary" component={Link} to="/login"><h3>Login</h3></Button>
-            </Box>
+              {renderAuthButtons()}
           </Toolbar>
         </AppBar>
 
