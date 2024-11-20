@@ -115,13 +115,11 @@ function CadastroFuncionario() {
                     <Typography variant="h1" gutterBottom textAlign={"center"} color="secondary">
                         Cadastro
                     </Typography>
-
                     {message && (
                         <Typography variant="h6" color={message.startsWith("Cadastro") ? "green" : "red"} textAlign="center">
                             {message}
                         </Typography>
                     )}
-
                     <TextField
                         label="Nome Completo:"
                         name="nome"

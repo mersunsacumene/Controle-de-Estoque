@@ -1,7 +1,7 @@
 import React from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Box, Card, CardContent, Typography, Button, Grid2 } from '@mui/material';
-import one from "./static/image1.png";
+import one from "./static/Sapato.png";
 
 const produtos = new Array(16).fill({
     evento:'Promoção',
@@ -30,13 +30,12 @@ function Carroussel() {
             interval={3000}
             indicatorContainerProps={{
                 style: {
-                    marginTop: '700px',
+                    marginTop: '0px',
                     justifyContent: 'center',
                 },
             }}
             indicatorIconButtonProps={{
                 style: {
-                    padding: '5px',
                     color: '#c4c4c4',
                 },
             }}
@@ -56,31 +55,43 @@ function Carroussel() {
 function ProdutoGrid({ produtos }) {
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-            <Grid2 container spacing={2} sx={{ width: "40%" }}>
+            <Grid2 container spacing={2}>
                 {produtos.map((produto, index) => (
                     <Grid2 item xs={12} sm={6} md={3} key={index} >
                         <Card
                             sx={{
                                 marginTop: '120px',
                                 border: '2px solid #02FF39',
-                                borderRadius: '24px',
+                                borderRadius: '16px',
                                 backgroundColor: 'black',
                                 color: 'white',
+                                maxWidth: '400px',
+                                height: 'max-content',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: '10px',
                             }}
                         >
                             <CardContent style={{ textAlign: 'center' }}>
-                                <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                                     {produto.evento}
                                 </Typography>
                                 <Box
                                     component="img"
                                     src={produto.imagem}
                                     alt={produto.nome}
+                                    style={{
+                                        width: '100%',
+                                        maxHeight: '120px', // Ajusta tamanho da imagem
+                                        objectFit: 'cover',
+                                    }}
                                 />
-                                <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                                     {produto.nome}
                                 </Typography>
-                                <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                                     Valor: {produto.valor}
                                 </Typography>
                                 <Button
@@ -102,6 +113,7 @@ function ProdutoGrid({ produtos }) {
         </Box>
     );
 }
+
 function CarouselProduto({ produtos }) {
     return (
         <Box style={{ maxHeight: 'min-content' }}>

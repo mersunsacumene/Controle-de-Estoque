@@ -9,6 +9,7 @@ import CadastroFuncionario from "./CadastroFuncionario";
 import EsqueciSenha from "./EsqueciSenha";
 import Adming from "./Admin";
 import Funcionario from "./Funcionario";
+import Carrinho from "./Carrinho";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/produtos" element={<Produtos />} />
         <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/carrinho" element={<Carrinho />} />
         <Route path="/esquecisenha" element={<EsqueciSenha />} />
         <Route path="/cadastroFuncionario" element={<CadastroFuncionario />} />
           <Route path="/funcionario" element={<Funcionario />} />
