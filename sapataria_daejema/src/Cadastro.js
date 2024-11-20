@@ -76,6 +76,16 @@ function Cadastro() {
                     confirmacaoSenha: "",
                 });
                 setFormErrors({});
+                const login = await axios.post("http://127.0.0.1:5000/usuario/login", {
+                    email: formValues.email,
+                    password: formValues.senha,
+                },{headers: {"Content-Type": "application/json"}});
+                console.log(login.data)
+                if (login.data.token) {
+                    localStorage.setItem("authToken", login.data.token);
+
+                    window.dispatchEvent(new Event('storage'));
+                }
                 navigate("/")
             } catch (error) {
                 console.log('got error', error.message, error.response)
