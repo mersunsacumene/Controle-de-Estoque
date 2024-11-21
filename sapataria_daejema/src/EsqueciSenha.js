@@ -3,6 +3,7 @@ import { TextField, Button, Typography, Paper, ThemeProvider, Grid2 } from "@mui
 import { theme } from "./static/Utils";
 import { useNavigate } from "react-router-dom";
 import {useBackground} from "./static/UseBackGround";
+import axios from "axios";
 
 function EsqueciSenha() {
     useBackground('favicon2.png');
@@ -12,17 +13,6 @@ function EsqueciSenha() {
     const [formErrors, setFormErrors] = useState({});
     const [message, setMessage] = useState("");
     const navigate = useNavigate(); // Navegação após sucesso (por exemplo, para login)
-
-    // Função para gerar uma senha aleatória
-    const generateRandomPassword = () => {
-        const length = 8; // Tamanho da senha
-        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
-        let password = "";
-        for (let i = 0; i < length; i++) {
-            password += charset.charAt(Math.floor(Math.random() * charset.length));
-        }
-        return password;
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,21 +33,19 @@ function EsqueciSenha() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            const newPassword = generateRandomPassword();
-
-            // Simulando o envio de e-mail
-            const emailSent = true; // Aqui você deve integrar com um serviço de envio de e-mail
-
-            if (emailSent) {
-                setMessage(`Sua nova senha foi enviada para o email ${formValues.email}.`);
-
-
-                setTimeout(() => {
-                    navigate("/login");
-                }, 2000);
-            } else {
-                setMessage("Falha ao enviar a nova senha.");
+            try{
+                const response = await axios.post("http://127.0.0.1:5000/usuario/recuperarSenha",{
+                    email:formValues.email,
+                },{headers: {"Content-Type": "application/json"}});
+                console.log(response.data)
+                setMessage(response.data.message);
+                navigate("/login")
+            }catch(error){
+                console.log('got error', error.message, error.response)
+                const errorMsg = error.response?.data?.error || "Erro desconhecido.";
+                setMessage(errorMsg);
             }
+
         }
     };
 
