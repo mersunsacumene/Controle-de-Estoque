@@ -1,14 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Box, Card, CardContent, Typography, Button, Grid2 } from '@mui/material';
-import one from "./static/Sapato.png";
-
-const produtos = new Array(16).fill({
-    evento:'Promoção',
-    nome: 'Sandália de Moisés',
-    valor: '19,99',
-    imagem: one,
-});
+import axios from 'axios';
 
 const agruparProdutos = (produtos, tamanhoGrupo) => {
     const grupos = [];
@@ -19,6 +12,26 @@ const agruparProdutos = (produtos, tamanhoGrupo) => {
 };
 
 function Carroussel() {
+    const [produtos, setProdutos] = useState([]);
+
+    useEffect(() => {
+        // Fazendo a requisição para buscar as promoções
+        axios.get('http://localhost:5000/promocao/promocoes')  // Ajuste para o endpoint da sua API
+            .then(response => {
+                // Atualiza o estado com os produtos obtidos da API
+                const promocoes = response.data.promocoesComItens.map(item => ({
+                    evento: 'Promoção',
+                    nome: item.produto.nome_prod,
+                    valor: item.promocao.valor,
+                    imagem: item.produto.url_img, // Defina um valor padrão para imagem, caso não venha
+                }));
+                setProdutos(promocoes);
+            })
+            .catch(error => {
+                console.error('Erro ao carregar promoções', error);
+            });
+    }, []);
+
     const lotes = agruparProdutos(produtos, 4);
 
     return (
@@ -80,7 +93,7 @@ function ProdutoGrid({ produtos }) {
                                 </Typography>
                                 <Box
                                     component="img"
-                                    src={produto.imagem}
+                                    src={`http://localhost:5000${produto.imagem}`}
                                     alt={produto.nome}
                                     style={{
                                         width: '100%',
