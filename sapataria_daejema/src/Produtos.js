@@ -12,7 +12,6 @@ function Produtos() {
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [produtos, setProdutos] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
 
     const fetchProducts = async () => {
 
@@ -33,10 +32,6 @@ function Produtos() {
 
     const toggleDrawer = (open) => {
         setDrawerOpen(open);
-    };
-    const handleOpenModal = () => setOpenModal(true);
-    const handleCloseModal = () => setOpenModal(false);
-    const handleSaveProduct = async () => {
     };
     return (
         <ThemeProvider theme={theme}>
@@ -72,23 +67,8 @@ function Produtos() {
                         <ListItemText primary="Sapato Social" />
                     </ListItem>
                 </List>
-                <Box style={{marginTop: '120%'}}>
-                    <Button
-                        style={{
-                            background: '#FF8000',
-                            color: 'black',
-                            border: '2px solid black',
-                            borderRadius: '99px',
-                            width: 'max-content',
-                            margin:"30px",
-                        }}
-                        onClick={handleOpenModal}
-                    >
-                        Adicionar Mercadoria
-                    </Button>
-                </Box>
             </Drawer>
-            <Dialog open={openModal} onClose={handleCloseModal}>
+            <Dialog>
                 <DialogTitle>Cadastrar Nova Mercadoria</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -126,13 +106,12 @@ function Produtos() {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseModal}
+                    <Button
                             color="secondary"
                             variant="contained">
                         Cancelar
                     </Button>
                     <Button
-                        onClick={() => {handleCloseModal();}}
                         color="secundary"
                         variant="contained"
                     >
@@ -176,9 +155,7 @@ function Produtos() {
                 ))}
             </Grid2>
             </Box>
-
         </ThemeProvider>
     );
 }
-
 export default Produtos;

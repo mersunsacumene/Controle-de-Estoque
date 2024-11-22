@@ -40,7 +40,7 @@ export const theme = createTheme({
             main: '#FFFFFF',
         },
         secondary: {
-            main: '#02FF39',
+            main: '#1b4d93',
         },
     },
 });
