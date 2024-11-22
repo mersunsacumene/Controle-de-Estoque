@@ -1,4 +1,4 @@
-// src/hooks/useBackground.js
+
 import { useEffect } from "react";
 
 export const useBackground = (imageUrl) => {

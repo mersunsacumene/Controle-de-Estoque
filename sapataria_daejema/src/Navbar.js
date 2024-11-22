@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {AppBar, Toolbar, Modal, Button, Box, ThemeProvider, Typography} from '@mui/material';
 import { Link } from 'react-router-dom';
-import threepng from './static/image3.png'
+import threepng from './static/Logo (2).png'
 import {  theme } from "./static/Utils";
 
 
@@ -38,10 +38,10 @@ function Navbar() {
         if (!isAuthenticated) {
             return (
                 <Box>
-                    <Button color="secondary" sx={{marginRight: 2}} onClick={handleOpen}>
+                    <Button color="primary" sx={{marginRight: 2}} onClick={handleOpen}>
                         <Typography variant="h6">Cadastro</Typography>
                     </Button>
-                    <Button color="secondary" component={Link} to="/login">
+                    <Button color="primary" component={Link} to="/login">
                         <Typography variant="h6">Login</Typography>
                     </Button>
                 </Box>
@@ -49,10 +49,10 @@ function Navbar() {
         }
         return  (
             <Box>
-                <Button color="secondary" sx={{marginRight: 2}}>
+                <Button color="primary" sx={{marginRight: 2}}>
                     <Typography variant="h6" component={Link} to="/carrinho">Carrinho</Typography>
                 </Button>
-            <Button color="secondary" sx={{marginRight: 2}} onClick={logout}>
+            <Button color="primary" sx={{marginRight: 2}} onClick={logout}>
                 <Typography variant="h6">Sair</Typography>
             </Button>
             </Box>
@@ -61,15 +61,15 @@ function Navbar() {
 
   return (
       <ThemeProvider theme={theme}>
-        <AppBar position="fixed" sx={{ backgroundColor: 'black', marginTop: -1, zIndex: 1201 }}>
+        <AppBar position="fixed" sx={{ backgroundColor: '#1b4d93', marginTop: -1, zIndex: 1201 }}>
           <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box sx={{ flexGrow: 0 }}>
               <a href='/'><img src={threepng} alt="Logo" style={{ height: 80 }} /></a>
             </Box>
 
             <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
-              <Button color="secondary" component={Link} to="/"><h2>Home</h2></Button>
-              <Button color="secondary" component={Link} to="/produtos"><h2>Calçados</h2></Button>
+              <Button color="primary" component={Link} to="/"><h2>Home</h2></Button>
+              <Button color="primary" component={Link} to="/produtos"><h2>Calçados</h2></Button>
             </Box>
               {renderAuthButtons()}
           </Toolbar>
