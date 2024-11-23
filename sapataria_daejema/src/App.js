@@ -7,12 +7,13 @@ import Cadastro from './Cadastro';
 import Login from './Login';
 import CadastroFuncionario from "./CadastroFuncionario";
 import EsqueciSenha from "./EsqueciSenha";
-import Adming from "./Admin";
 import Funcionario from "./Funcionario";
 import Carrinho from "./Carrinho";
 import CadastroNovosProdutos from "./CadastroNovosProdutos";
 import CadastroLote from "./CadastroLote";
 import CadastroFornecedor from "./CadastroFornecedor";
+import Admin from "./Admin";
+import AdicionarMercadoria from "./AdicionarMercadoria";
 
 function App() {
   return (
@@ -27,9 +28,10 @@ function App() {
         <Route path="/cadastroFuncionario" element={<CadastroFuncionario />} />
           <Route path="/cadastroFornecedor" element={<CadastroFornecedor />} />
           <Route path="/cadastroLote" element={<CadastroLote />} />
+        <Route path="/adicionarMercadoria" element={<AdicionarMercadoria />} />
           <Route path="/cadastroNovosProdutos" element={<CadastroNovosProdutos />} />
           <Route path="/funcionario" element={<Funcionario />} />
-          <Route path="/adming" element={<Adming />} />
+          <Route path="/adming" element={<Admin />} />
         <Route path="/login" element={<Login />} />
       </Routes>
     </Router>

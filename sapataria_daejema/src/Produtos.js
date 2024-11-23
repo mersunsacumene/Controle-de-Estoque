@@ -14,7 +14,6 @@ function Produtos() {
     const [produtos, setProdutos] = useState([]);
     const [openModal, setOpenModal] = useState(false);
 
-    // Função para carregar todos os produtos
     const fetchProducts = async () => {
         try {
             const response = await axios.get('http://localhost:5000/produto/produtos', {
@@ -26,23 +25,22 @@ function Produtos() {
         }
     };
 
-    // Função para carregar produtos filtrados por tipo
     const fetchProductsByType = async (type) => {
         try {
             const response = await axios.post('http://127.0.0.1:5000/produto/produtosTipo',
-                { type: type }, // Passando o tipo no corpo da requisição
+                { type: type },
                 {
                     headers: { "Content-Type": "application/json" }
                 });
             console.log("Produtos filtrados por tipo:", response.data);
-            setProdutos(response.data); // Atualizando a lista de produtos
+            setProdutos(response.data);
         } catch (erro) {
             console.log("Erro ao carregar produtos por tipo: ", erro);
         }
     };
 
     useEffect(() => {
-        fetchProducts(); // Carregar todos os produtos ao carregar a página
+        fetchProducts();
     }, []);
 
     const toggleDrawer = (open) => {
@@ -54,14 +52,13 @@ function Produtos() {
     const handleSaveProduct = async () => {
     };
 
-    // Função para tratar o click nos tipos de produtos
     const handleTypeClick = (type) => {
-        fetchProductsByType(type); // Filtra os produtos pelo tipo clicado
+        fetchProductsByType(type);
     };
 
     return (
         <ThemeProvider theme={theme}>
-            <IconButton onClick={() => toggleDrawer(true)} style={{ position: 'fixed', marginTop: '90px', left: '30px', cursor: 'pointer' }}>
+            <IconButton onClick={() => toggleDrawer(true)} style={{ position: 'fixed', left: '30px', cursor: 'pointer' }}>
                 <MenuIcon /> <label>Menu</label>
             </IconButton>
 
@@ -70,19 +67,19 @@ function Produtos() {
                 open={drawerOpen}
                 onClose={() => toggleDrawer(false)}
                 sx={{
-                    width: 300,
-                    flexShrink: 0,
                     '& .MuiDrawer-paper': {
                         width: 280,
-                        height: 780,
+                        height: "fill",
                         display: 'flex',
-                        marginTop: '65px',
+                        flexDirection: 'column',
+                        paddingTop: '20px',
+                        justifyContent: 'space-between',
                         backgroundColor: "solid",
                         color: "black",
                     },
                 }}
             >
-                <List style={{ margin: "50px 30px" }}>
+                <List style={{ margin: "50px 30px", cursor: "pointer" }}>
                     <ListItem button onClick={() => handleTypeClick('Tênis')}>
                         <ListItemText primary="Tênis" />
                     </ListItem>
@@ -96,11 +93,12 @@ function Produtos() {
                         <ListItemText primary="Chinelo" />
                     </ListItem>
                 </List>
-                <Box style={{ marginTop: '120%' }}>
+
+                <Box style={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                         style={{
-                            background: '#FF8000',
-                            color: 'black',
+                            background: '#1b4d93',
+                            color: '#fff',
                             border: '2px solid black',
                             borderRadius: '99px',
                             width: 'max-content',
@@ -112,6 +110,7 @@ function Produtos() {
                     </Button>
                 </Box>
             </Drawer>
+
 
             <Dialog open={openModal} onClose={handleCloseModal}>
                 <DialogTitle>Cadastrar Nova Mercadoria</DialogTitle>

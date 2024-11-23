@@ -4,17 +4,17 @@ import { Link } from 'react-router-dom';
 import threepng from './static/Logo (2).png'
 import {  theme } from "./static/Utils";
 
-
 function Navbar() {
-  const [open, setOpen] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(()=>{
-      return !!localStorage.getItem('authToken');
-  });
+    const [open, setOpen] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(()=> {
+        return !!localStorage.getItem('authToken');
+    });
 
     const checkAuthentication = () => {
         const token = localStorage.getItem('authToken');
         setIsAuthenticated(!!token);
     };
+
     useEffect(() => {
         const handleStorageChange = () => {
             checkAuthentication();
@@ -38,92 +38,48 @@ function Navbar() {
         if (!isAuthenticated) {
             return (
                 <Box>
-                    <Button color="primary" sx={{marginRight: 2}} onClick={handleOpen}>
-                        <Typography variant="h6">Cadastro</Typography>
+                    <Button color="primary" component={Link} to="/cadastro">
+                        <Typography variant="h8">Cadastro</Typography>
                     </Button>
                     <Button color="primary" component={Link} to="/login">
-                        <Typography variant="h6">Login</Typography>
+                        <Typography variant="h8">Login</Typography>
                     </Button>
                 </Box>
             );
         }
-        return  (
+        return (
             <Box>
-                <Button color="primary" sx={{marginRight: 2}}>
-                    <Typography variant="h6" component={Link} to="/carrinho">Carrinho</Typography>
+                <Button color="primary" component={Link} to="/carrinho">
+                    <Typography variant="h6">Carrinho</Typography>
                 </Button>
-            <Button color="primary" sx={{marginRight: 2}} onClick={logout}>
-                <Typography variant="h6">Sair</Typography>
-            </Button>
+                <Button color="primary" onClick={logout}>
+                    <Typography variant="h6">Sair</Typography>
+                </Button>
             </Box>
-                )
+        );
     }
 
-  return (
-      <ThemeProvider theme={theme}>
-        <AppBar position="fixed" sx={{ backgroundColor: '#1b4d93', marginTop: -1, zIndex: 1201 }}>
-          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ flexGrow: 0 }}>
-              <a href='/'><img src={threepng} alt="Logo" style={{ height: 80 }} /></a>
-            </Box>
+    return (
+        <ThemeProvider theme={theme}>
+            <AppBar position="fixed" sx={{ backgroundColor: '#1b4d93', top: 0, width: '100%', zIndex: 1201 }}>
+                <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingX: 4 }}>
+                    <Box sx={{ flexGrow: 0 }}>
+                        <a href='/'><img src={threepng} alt="Logo" style={{ height: 80 }} /></a>
+                    </Box>
 
-            <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
-              <Button color="primary" component={Link} to="/"><h2>Home</h2></Button>
-              <Button color="primary" component={Link} to="/produtos"><h2>Calçados</h2></Button>
-            </Box>
-              {renderAuthButtons()}
-          </Toolbar>
-        </AppBar>
+                    <Box sx={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
+                        <Button color="primary" component={Link} to="/"><h2>Home</h2></Button>
+                        <Button color="primary" component={Link} to="/produtos"><h2>Calçados</h2></Button>
+                    </Box>
+                    {renderAuthButtons()}
+                </Toolbar>
+            </AppBar>
 
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-title"
-            aria-describedby="modal-description"
-        >
-          <Box
-              sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 300,
-                bgcolor: 'background.paper',
-                boxShadow: 24,
-                p: 4,
-                borderRadius: 2,
-              }}
-          >
-            <Typography id="modal-title" variant="h6" component="h2" textAlign="center">
-              Escolha o Tipo de Cadastro
-            </Typography>
-            <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to="/cadastro"
-                  onClick={handleClose}
-              >
-                Cadastro Normal
-              </Button>
-              <Button
-                  variant="contained"
-                  color="secondary"
-                  component={Link}
-                  to="/cadastroFuncionario"
-                  onClick={handleClose}
-              >
-                Cadastro Funcionário
-              </Button>
+            <Box sx={{ marginTop: '80px' }}>
+                {/* Conteúdo do body aqui */}
             </Box>
-          </Box>
-        </Modal>
-      </ThemeProvider>
-  );
+        </ThemeProvider>
+    );
 }
 
 export default Navbar;
-
-
-

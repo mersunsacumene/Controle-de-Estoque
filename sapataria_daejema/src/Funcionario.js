@@ -18,7 +18,7 @@ import { theme } from "./static/Utils";
 import { ThemeProvider } from '@mui/material/styles';
 import { useBackground } from "./static/UseBackGround";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Para redirecionar páginas
+import { useNavigate } from 'react-router-dom';
 
 function Produtos() {
     useBackground('favicon2.png');
@@ -27,7 +27,7 @@ function Produtos() {
     const [produtos, setProdutos] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
-    const navigate = useNavigate(); // Usado para redirecionar
+    const navigate = useNavigate();
 
     const fetchProducts = async () => {
         try {
@@ -64,7 +64,6 @@ function Produtos() {
                 onClick={() => toggleDrawer(true)}
                 style={{
                     position: 'fixed',
-                    marginTop: '90px',
                     left: '30px',
                     cursor: 'pointer'
                 }}
@@ -72,7 +71,6 @@ function Produtos() {
                 <MenuIcon /> <label>Menu</label>
             </IconButton>
 
-            {/* Drawer */}
             <Drawer
                 anchor="left"
                 open={drawerOpen}
@@ -82,33 +80,29 @@ function Produtos() {
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
                         width: 280,
-                        height: 780,
+                        height: "fill",
                         display: 'flex',
-                        marginTop: '65px',
+                        marginTop: '20px',
                         backgroundColor: "solid",
                         color: "black",
                     },
                 }}
             >
                 <List style={{ margin: "50px 30px" }}>
-                    {/* Redirecionar para a página Relatórios */}
                     <ListItem button onClick={() => navigate('/relatorios')}>
                         <ListItemText primary="Relatórios" />
                     </ListItem>
 
-                    {/* Abrir modal para Cadastros */}
                     <ListItem button onClick={() => handleOpenModal('Cadastrar')}>
                         <ListItemText primary="Cadastros" />
                     </ListItem>
 
-                    {/* Abrir modal para Adicionar Mercadoria */}
-                    <ListItem button onClick={() => handleOpenModal('Adicionar Mercadoria')}>
+                    <ListItem button onClick={() => navigate('/adicionarMercadoria')}>
                         <ListItemText primary="Adicionar Mercadoria" />
                     </ListItem>
                 </List>
             </Drawer>
 
-            {/* Modal */}
             <Modal
                 open={openModal}
                 onClose={handleCloseModal}
@@ -145,47 +139,6 @@ function Produtos() {
                 </Box>
             </Modal>
 
-            {/* Conteúdo Principal */}
-            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <Grid2 container spacing={2} width="80%">
-                    {produtos.map((produto, index) => (
-                        <Grid2 item xs={12} sm={6} md={3} key={index}>
-                            <Card
-                                sx={{
-                                    marginTop: '120px',
-                                    border: '2px solid #02FF39',
-                                    borderRadius: '24px',
-                                }}
-                            >
-                                <CardContent style={{ textAlign: 'center' }}>
-                                    <Typography
-                                        component="img"
-                                        src={`http://localhost:5000${produto.url_img}`}
-                                        alt={produto.nome_prod}
-                                        sx={{ width: '100%', objectFit: 'cover' }}
-                                    />
-                                    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                        {produto.nome_prod}
-                                    </Typography>
-                                    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                        Valor Unitário: R${produto.preco_unit}
-                                    </Typography>
-                                    <Button
-                                        style={{
-                                            background: '#FF8000',
-                                            color: 'black',
-                                            border: '2px solid black',
-                                            borderRadius: '99px',
-                                        }}
-                                    >
-                                        Comprar
-                                    </Button>
-                                </CardContent>
-                            </Card>
-                        </Grid2>
-                    ))}
-                </Grid2>
-            </Box>
         </ThemeProvider>
     );
 }

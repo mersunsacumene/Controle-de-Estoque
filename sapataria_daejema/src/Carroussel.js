@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
-import { Box, Card, CardContent, Typography, Button, Grid2 } from '@mui/material';
+import { Box, Card, CardContent, Typography, Button, Grid } from '@mui/material';
 import axios from 'axios';
 
+// Função para agrupar produtos em lotes
 const agruparProdutos = (produtos, tamanhoGrupo) => {
     const grupos = [];
     for (let i = 0; i < produtos.length; i += tamanhoGrupo) {
@@ -14,24 +15,19 @@ const agruparProdutos = (produtos, tamanhoGrupo) => {
 function Carroussel() {
     const [produtos, setProdutos] = useState([]);
 
+    // Simulação de 20 produtos
     useEffect(() => {
-        // Fazendo a requisição para buscar as promoções
-        axios.get('http://localhost:5000/promocao/promocoes')  // Ajuste para o endpoint da sua API
-            .then(response => {
-                // Atualiza o estado com os produtos obtidos da API
-                const promocoes = response.data.promocoesComItens.map(item => ({
-                    evento: 'Promoção',
-                    nome: item.produto.nome_prod,
-                    valor: item.promocao.valor,
-                    imagem: item.produto.url_img, // Defina um valor padrão para imagem, caso não venha
-                }));
-                setProdutos(promocoes);
-            })
-            .catch(error => {
-                console.error('Erro ao carregar promoções', error);
-            });
+        // Simulando 20 produtos com imagens, nomes e valores
+        const simulado = Array.from({ length: 20 }, (_, index) => ({
+            evento: 'Promoção',
+            nome: `Produto ${index + 1}`,
+            valor: `R$ ${(index + 1) * 10},00`,
+            imagem: '/path/to/image.jpg', // Aqui você pode colocar uma URL de imagem real ou usar uma imagem genérica
+        }));
+        setProdutos(simulado);
     }, []);
 
+    // Agrupar produtos em lotes de 4
     const lotes = agruparProdutos(produtos, 4);
 
     return (
@@ -59,7 +55,9 @@ function Carroussel() {
             }}
         >
             {lotes.map((lote, index) => (
-                <CarouselProduto key={index} produtos={lote} />
+                <Box key={index} sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+                    <ProdutoGrid produtos={lote} />
+                </Box>
             ))}
         </Carousel>
     );
@@ -67,71 +65,67 @@ function Carroussel() {
 
 function ProdutoGrid({ produtos }) {
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-            <Grid2 container spacing={2}>
-                {produtos.map((produto, index) => (
-                    <Grid2 item xs={12} sm={6} md={3} key={index} >
-                        <Card
-                            sx={{
-                                marginTop: '120px',
-                                border: '2px solid #02FF39',
-                                borderRadius: '16px',
-                                backgroundColor: 'black',
+        <Box
+            sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                height:'max-content',
+                alignItems: 'center',
+                gap: 2, // Espaçamento entre os itens
+                overflowX: 'auto', // Rolagem horizontal para telas pequenas
+                padding: 2,
+            }}
+        >
+            {produtos.map((produto, index) => (
+                <Card
+                    key={index}
+                    sx={{
+                        border: '2px solid #02FF39',
+                        borderRadius: '16px',
+                        backgroundColor: 'black',
+                        color: 'white',
+                        width: '250px', // Largura fixa de cada card
+                        height: 'auto',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: 2,
+                    }}
+                >
+                    <CardContent style={{ textAlign: 'center' }}>
+                        <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                            {produto.evento}
+                        </Typography>
+                        <Box
+                            component="img"
+                            src={`http://localhost:5000${produto.imagem}`}
+                            alt={produto.nome}
+                            style={{
+                                width: '100%',
+                                maxHeight: '120px',
+                                objectFit: 'cover',
+                            }}
+                        />
+                        <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                            {produto.nome}
+                        </Typography>
+                        <Typography variant="h6" style={{ fontWeight: 'bold' }}>
+                            {produto.valor}
+                        </Typography>
+                        <Button
+                            style={{
+                                background: '#1b4d93',
                                 color: 'white',
-                                maxWidth: '400px',
-                                height: 'max-content',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                padding: '10px',
+                                border: '2px solid black',
+                                borderRadius: '99px',
+                                marginTop: '10px',
                             }}
                         >
-                            <CardContent style={{ textAlign: 'center' }}>
-                                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                                    {produto.evento}
-                                </Typography>
-                                <Box
-                                    component="img"
-                                    src={`http://localhost:5000${produto.imagem}`}
-                                    alt={produto.nome}
-                                    style={{
-                                        width: '100%',
-                                        maxHeight: '120px', // Ajusta tamanho da imagem
-                                        objectFit: 'cover',
-                                    }}
-                                />
-                                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                                    {produto.nome}
-                                </Typography>
-                                <Typography variant="h6" style={{ fontWeight: 'bold' }}>
-                                    Valor: {produto.valor}
-                                </Typography>
-                                <Button
-                                    style={{
-                                        background: '#FF8000',
-                                        color: 'black',
-                                        border: '2px solid black',
-                                        borderRadius: '99px',
-                                        marginTop: '10px',
-                                    }}
-                                >
-                                    Comprar
-                                </Button>
-                            </CardContent>
-                        </Card>
-                    </Grid2>
-                ))}
-            </Grid2>
-        </Box>
-    );
-}
-
-function CarouselProduto({ produtos }) {
-    return (
-        <Box style={{ maxHeight: 'min-content' }}>
-            {Array(3).fill(0).map((_, index) => (
-                <ProdutoGrid key={index} produtos={produtos} />
+                            Comprar
+                        </Button>
+                    </CardContent>
+                </Card>
             ))}
         </Box>
     );
