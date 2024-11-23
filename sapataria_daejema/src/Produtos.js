@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Grid2, TextField } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { Card, CardContent, Typography, Button, Drawer, List, ListItem, ListItemText, IconButton } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { theme } from "./static/Utils";
@@ -12,7 +12,6 @@ function Produtos() {
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [produtos, setProdutos] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
 
     const fetchProducts = async () => {
         try {
@@ -45,11 +44,6 @@ function Produtos() {
 
     const toggleDrawer = (open) => {
         setDrawerOpen(open);
-    };
-
-    const handleOpenModal = () => setOpenModal(true);
-    const handleCloseModal = () => setOpenModal(false);
-    const handleSaveProduct = async () => {
     };
 
     const handleTypeClick = (type) => {
@@ -93,76 +87,11 @@ function Produtos() {
                         <ListItemText primary="Chinelo" />
                     </ListItem>
                 </List>
-
-                <Box style={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button
-                        style={{
-                            background: '#1b4d93',
-                            color: '#fff',
-                            border: '2px solid black',
-                            borderRadius: '99px',
-                            width: 'max-content',
-                            margin: "30px",
-                        }}
-                        onClick={handleOpenModal}
-                    >
-                        Adicionar Mercadoria
-                    </Button>
-                </Box>
             </Drawer>
-
-
-            <Dialog open={openModal} onClose={handleCloseModal}>
-                <DialogTitle>Cadastrar Nova Mercadoria</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        label="CNPJ:"
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        label="Nome do Produto:"
-                        name="nomeProduto"
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        label="Preço Unitário:"
-                        name="precoUnitario"
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        label="Lote:"
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        label="URL da Imagem"
-                        name="urlImagem"
-                        fullWidth
-                        margin="normal"
-                        variant="outlined"
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseModal} color="secondary" variant="contained">
-                        Cancelar
-                    </Button>
-                    <Button onClick={() => { handleCloseModal(); }} color="secondary" variant="contained">
-                        Salvar
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
             <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-                <Grid2 container spacing={2} width="80%">
+                <Grid container spacing={2} width="80%">
                     {produtos.map((produto, index) => (
-                        <Grid2 item xs={12} sm={6} md={3} key={index}>
+                        <Grid item xs={12} sm={6} md={3} key={index}>
                             <Card sx={{
                                 marginTop: '120px',
                                 border: '2px solid #02FF39',
@@ -188,9 +117,9 @@ function Produtos() {
                                     </Button>
                                 </CardContent>
                             </Card>
-                        </Grid2>
+                        </Grid>
                     ))}
-                </Grid2>
+                </Grid>
             </Box>
 
         </ThemeProvider>
