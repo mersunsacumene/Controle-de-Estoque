@@ -10,7 +10,6 @@ function CadastroFuncionario() {
     useBackground('favicon2.png');
     const [formValues, setFormValues] = useState({
         nome: "",
-        cpf: "",
         telefone: "",
         email: "",
         confirmaEmail: "",
@@ -29,9 +28,7 @@ function CadastroFuncionario() {
 
         let formattedValue = value;
 
-        if (name === "cpf") {
-            formattedValue = formatCPF(value);
-        } else if (name === "telefone") {
+     if (name === "telefone") {
             formattedValue = formatPhone(value);
         }
 
@@ -42,11 +39,6 @@ function CadastroFuncionario() {
         let errors = {};
 
         if (!formValues.nome) errors.nome = "Nome é obrigatório";
-        if (!formValues.cpf) {
-            errors.cpf = "CPF é obrigatório";
-        } else if (!isValidCPF(formValues.cpf)) {
-            errors.cpf = "CPF inválido";
-        }
 
         if (!formValues.telefone) {
             errors.telefone = "Telefone é obrigatório";
@@ -98,7 +90,6 @@ function CadastroFuncionario() {
 
             setFormValues({
                 nome: "",
-                cpf: "",
                 telefone: "",
                 email: "",
                 confirmaEmail: "",
@@ -130,17 +121,6 @@ function CadastroFuncionario() {
                         onChange={handleChange}
                         error={!!formErrors.nome}
                         helperText={formErrors.nome}
-                    />
-                    <TextField
-                        label="CPF:"
-                        name="cpf"
-                        fullWidth
-                        color="secondary"
-                        margin="normal"
-                        value={formValues.cpf}
-                        onChange={handleChange}
-                        error={!!formErrors.cpf}
-                        helperText={formErrors.cpf}
                     />
                     <TextField
                         label="Telefone:"

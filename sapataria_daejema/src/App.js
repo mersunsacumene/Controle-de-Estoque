@@ -14,9 +14,11 @@ import CadastroLote from "./CadastroLote";
 import CadastroFornecedor from "./CadastroFornecedor";
 import Admin from "./Admin";
 import AdicionarMercadoria from "./AdicionarMercadoria";
+import {CartProvider} from "./CarrinhoContext";
 
 function App() {
   return (
+      <CartProvider>
     <Router>
       <Navbar />
       <Routes>
@@ -35,6 +37,7 @@ function App() {
         <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
+      </CartProvider>
   );
 }
 

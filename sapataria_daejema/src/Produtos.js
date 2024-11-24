@@ -6,9 +6,14 @@ import { theme } from "./static/Utils";
 import { ThemeProvider } from '@mui/material/styles';
 import { useBackground } from "./static/UseBackGround";
 import axios from 'axios';
-
+import { useContext } from 'react';
+import {CarrinhotContext} from './CarrinhoContext'
+import { useNavigate } from "react-router-dom";
 function Produtos() {
     useBackground('favicon2.png');
+    const { addToCart } = useContext(CarrinhotContext);
+    const navigate = useNavigate();
+
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [produtos, setProdutos] = useState([]);
@@ -45,7 +50,11 @@ function Produtos() {
     const toggleDrawer = (open) => {
         setDrawerOpen(open);
     };
-
+    const handleAddToCart = (produto) => {
+        addToCart(produto);
+        console.log("Produto adicionado:", produto);
+        navigate('/carrinho'); // Redireciona para a página do carrinho
+    };
     const handleTypeClick = (type) => {
         fetchProductsByType(type);
     };
@@ -112,8 +121,8 @@ function Produtos() {
                                             border: '2px solid black',
                                             borderRadius: '99px',
                                         }}
-                                    >
-                                        Comprar
+                                        onClick={() => handleAddToCart(produto)}     >
+                                        Adicionar ao Carrinho
                                     </Button>
                                 </CardContent>
                             </Card>

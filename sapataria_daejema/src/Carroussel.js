@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Box, Card, CardContent, Typography, Button, Grid } from '@mui/material';
+import axios from 'axios';
 
 // Função para agrupar produtos em lotes
 const agruparProdutos = (produtos, tamanhoGrupo) => {
@@ -16,14 +17,21 @@ function Carroussel() {
 
     // Simulação de 20 produtos
     useEffect(() => {
-        // Simulando 20 produtos com imagens, nomes e valores
-        const simulado = Array.from({ length: 20 }, (_, index) => ({
-            evento: 'Promoção',
-            nome: `Produto ${index + 1}`,
-            valor: `R$ ${(index + 1) * 10},00`,
-            imagem: 'Sapato.png', // Aqui você pode colocar uma URL de imagem real ou usar uma imagem genérica
-        }));
-        setProdutos(simulado);
+        // Fazendo a requisição para buscar as promoções
+        axios.get('http://localhost:5000/promocao/promocoes')  // Ajuste para o endpoint da sua API
+            .then(response => {
+                // Atualiza o estado com os produtos obtidos da API
+                const promocoes = response.data.promocoesComItens.map(item => ({
+                    evento: 'Promoção',
+                    nome: item.produto.nome_prod,
+                    valor: item.promocao.valor,
+                    imagem: item.produto.url_img, // Defina um valor padrão para imagem, caso não venha
+                }));
+                setProdutos(promocoes);
+            })
+            .catch(error => {
+                console.error('Erro ao carregar promoções', error);
+            });
     }, []);
 
     // Agrupar produtos em lotes de 12 (para preencher 3 linhas com 4 cards cada)
