@@ -1,8 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Box, Card, CardContent, Typography, Button, Grid } from '@mui/material';
 import axios from 'axios';
-import {CarrinhotContext} from './CarrinhoContext'
+import { CarrinhotContext } from './CarrinhoContext';
 import { useNavigate } from "react-router-dom";
 
 // Função para agrupar produtos em lotes
@@ -14,12 +14,16 @@ const agruparProdutos = (produtos, tamanhoGrupo) => {
     return grupos;
 };
 
-
-
 function Carroussel() {
     const [produtos, setProdutos] = useState([]);
-    // Simulação de 20 produtos
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar a autenticação
+    const checkAuth = () => {
+        const token = localStorage.getItem('authToken');
+        setIsAuthenticated(!!token);
+    };
+
     useEffect(() => {
+        checkAuth();
         // Fazendo a requisição para buscar as promoções
         axios.get('http://localhost:5000/promocao/promocoes')  // Ajuste para o endpoint da sua API
             .then(response => {
@@ -66,17 +70,16 @@ function Carroussel() {
         >
             {lotes.map((lote, index) => (
                 <Box key={index} sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
-                    <ProdutoGrid produtos={lote} />
+                    <ProdutoGrid produtos={lote} isAuthenticated={isAuthenticated} />
                 </Box>
             ))}
         </Carousel>
     );
 }
 
-function ProdutoGrid({ produtos }) {
+function ProdutoGrid({ produtos, isAuthenticated }) {
     const { addToCart } = useContext(CarrinhotContext);
     const navigate = useNavigate();
-    const [isAuthenticated] = useState(false); // Estado para verificar a autenticação
 
     const handleAddToCart = (produto) => {
         if (!isAuthenticated) {
@@ -137,14 +140,14 @@ function ProdutoGrid({ produtos }) {
                             <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                                 {produto.valor}
                             </Typography>
-                            <Button onClick={()=> handleAddToCart(produto)}
-                                style={{
-                                    background: '#1b4d93',
-                                    color: 'white',
-                                    border: '2px solid black',
-                                    borderRadius: '99px',
-                                    marginTop: '10px',
-                                }}
+                            <Button onClick={() => handleAddToCart(produto)}
+                                    style={{
+                                        background: '#1b4d93',
+                                        color: 'white',
+                                        border: '2px solid black',
+                                        borderRadius: '99px',
+                                        marginTop: '10px',
+                                    }}
                             >
                                 Comprar
                             </Button>
