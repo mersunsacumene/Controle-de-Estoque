@@ -8,9 +8,7 @@ import { CarrinhotContext } from './CarrinhoContext';
 function Carrinho() {
     useBackground('favicon2.png');
 
-    // Consome o estado do carrinho do contexto global
     const { produtosCarrinho, removeFromCart } = useContext(CarrinhotContext);
-
     const [drawerOpen, setDrawerOpen] = useState(true); // Drawer fixo à direita
     const [cupom, setCupom] = useState('');
     const [desconto, setDesconto] = useState(0); // Desconto em valor
@@ -20,7 +18,6 @@ function Carrinho() {
         setCupom(event.target.value);
     };
 
-    // Função para aplicar o desconto
     const aplicarDesconto = () => {
         if ((cupom === 'Matheus' || cupom === 'Emerson') && produtosCarrinho.length > 0) {
             setDesconto(50.0); // Exemplo de desconto fixo de R$ 50
@@ -94,6 +91,7 @@ function Carrinho() {
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginTop: 'auto',
+                            marginBottom: '16px',
                         }}
                     >
                         <Button

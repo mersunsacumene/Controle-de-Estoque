@@ -119,7 +119,7 @@ function Produtos() {
                         <Grid item xs={12} sm={6} md={3} key={index}>
                             <Card sx={{
                                 marginTop: '120px',
-                                border: '2px solid #02FF39',
+                                border: '2px solid #1b4d93',
                                 borderRadius: '24px',
                             }}>
                                 <CardContent style={{ textAlign: 'center' }}>
@@ -132,8 +132,8 @@ function Produtos() {
                                     </Typography>
                                     <Button
                                         style={{
-                                            background: '#FF8000',
-                                            color: 'black',
+                                            background: '#1b4d93',
+                                            color: '#fff',
                                             border: '2px solid black',
                                             borderRadius: '99px',
                                         }}

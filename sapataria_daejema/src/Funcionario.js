@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
     Box,
-    Grid2,
-    Card,
-    CardContent,
     Typography,
     Button,
     Drawer,
@@ -88,7 +85,7 @@ function Produtos() {
                     },
                 }}
             >
-                <List style={{ margin: "50px 30px" }}>
+                <List style={{ margin: "50px 30px", cursor:'pointer' }}>
                     <ListItem button onClick={() => navigate('/relatorios')}>
                         <ListItemText primary="Relatórios" />
                     </ListItem>

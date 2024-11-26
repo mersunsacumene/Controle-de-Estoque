@@ -108,7 +108,7 @@ function ProdutoGrid({ produtos, isAuthenticated }) {
                 <Grid item xs={3} key={index}>  {/* xs={3} para que 4 cards apareçam por linha (12 / 3 = 4) */}
                     <Card
                         sx={{
-                            border: '2px solid #02FF39',
+                            border: '2px solid #1b4d93',
                             borderRadius: '16px',
                             backgroundColor: 'black',
                             color: 'white',
