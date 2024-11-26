@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { AppBar, Toolbar, Button, Box, ThemeProvider, Typography, Badge } from '@mui/material';
-import { Link } from 'react-router-dom';
+import {AppBar, Toolbar, Button, Box, ThemeProvider, Typography, Badge, Modal, TextField} from '@mui/material';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import threepng from './static/Logo (2).png';
 import { theme } from "./static/Utils";
 import { CarrinhotContext } from './CarrinhoContext'; // Importação do contexto
@@ -10,11 +10,14 @@ function Navbar() {
     const { produtosCarrinho } = useContext(CarrinhotContext); // Acessando produtosCarrinho
     const [isAuthenticated, setIsAuthenticated] = useState(() => checkAuthentication()); // Usando checkAuthentication
     const [userRole, setUserRole] = useState(localStorage.getItem('userRole') || 'guest'); // Inicializando o papel do usuário
-
+    const location = useLocation(); // Para obter a rota atual
+    const [openLoginModal, setOpenLoginModal] = useState(false);
+    const navigate = useNavigate();
     useEffect(() => {
         const handleStorageChange = () => {
             setIsAuthenticated(checkAuthentication());
             setUserRole(localStorage.getItem('userRole') || 'guest'); // Atualiza o papel do usuário
+            console.log("Papel do usuário:", localStorage.getItem('userRole')); // Adicione este log
         };
 
         window.addEventListener('storage', handleStorageChange);
@@ -22,7 +25,15 @@ function Navbar() {
         return () => {
             window.removeEventListener('storage', handleStorageChange);
         };
-    }, []);
+    }, [location]);
+
+    const handleOpenLoginModal = () => {
+        setOpenLoginModal(true);
+    };
+
+    const handleCloseLoginModal = () => {
+        setOpenLoginModal(false);
+    };
 
     const logout = () => {
         localStorage.removeItem('authToken');
@@ -33,24 +44,82 @@ function Navbar() {
     };
 
     const renderAuthButtons = () => {
-        // Botões não são renderizados para funcionário ou admin
         if (userRole === 'funcionario' || userRole === 'adming') {
-            return null;
+            // Apenas botão "Sair" para Funcionário/Admin
+            return (
+                <Button color="primary" onClick={logout}>
+                    <Typography variant="h6">Sair</Typography>
+                </Button>
+            );
         }
 
         if (!isAuthenticated) {
+            // Botões "Cadastro" e "Login" apenas para usuários não autenticados
             return (
                 <Box>
                     <Button color="primary" component={Link} to="/cadastro">
                         <Typography variant="h8">Cadastro</Typography>
                     </Button>
-                    <Button color="primary" component={Link} to="/login">
+                    <Button color="primary" onClick={()=>handleOpenLoginModal()}>
                         <Typography variant="h8">Login</Typography>
                     </Button>
+                    <Modal
+                        open={openLoginModal}
+                        onClose={handleCloseLoginModal}
+                        aria-labelledby="login-modal-title"
+                        aria-describedby="login-modal-description"
+                    >
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 400,
+                                bgcolor: '#fff',
+                                boxShadow: 24,
+                                p: 4,
+                                borderRadius: 2,
+                            }}
+                        >
+                            <Button    fullWidth
+                                       variant="contained"
+                                       color="primary"
+                                       sx={{
+                                           color:"#fff",
+                                           bgcolor: '#1b4d93',
+                                           mt: 2 }}
+                                       onClick={() => {
+                                           handleCloseLoginModal();
+                                           navigate('/login');
+                                       }}
+
+                            >
+                                Login Funcionario
+                            </Button>
+
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                sx={{
+                                    color:"#fff",
+                                    bgcolor: '#1b4d93',
+                                    mt: 2 }}
+                                onClick={() => {
+                                    handleCloseLoginModal();
+                                    navigate('/login');
+                                }}
+                            >
+                                Login Usuario
+                            </Button>
+                        </Box>
+                    </Modal>
+
                 </Box>
             );
         }
 
+        // Usuários comuns autenticados
         return (
             <Box>
                 <Badge badgeContent={produtosCarrinho.length} color="error" overlap="circular" max={99}>
@@ -66,7 +135,7 @@ function Navbar() {
     };
 
     const renderLinks = () => {
-        // Links são ocultados para funcionário e admin
+        // Exibe links apenas para usuário comum
         if (userRole === 'funcionario' || userRole === 'adming') {
             return null;
         }
@@ -113,4 +182,3 @@ function Navbar() {
 }
 
 export default Navbar;
-

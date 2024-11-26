@@ -8,7 +8,14 @@ import {
     ListItem,
     ListItemText,
     IconButton,
-    Modal
+    Modal,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Paper,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { theme } from "./static/Utils";
@@ -17,13 +24,14 @@ import { useBackground } from "./static/UseBackGround";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-function Produtos() {
+function Funcionario() {
     useBackground('favicon2.png');
 
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [produtos, setProdutos] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
+    const [modalButtons, setModalButtons] = useState([]);
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
@@ -48,6 +56,17 @@ function Produtos() {
 
     const handleOpenModal = (content) => {
         setModalContent(content);
+        if (content === 'Cadastrar') {
+            setModalButtons([
+                { text: 'Cadastrar Fornecedor', action: () => navigate('/cadastroFornecedor') },
+                { text: 'Cadastrar Produto', action: () => navigate('/cadastroNovosProdutos') },
+            ]);
+        } else if (content === 'Relatórios') {
+            setModalButtons([
+                { text: 'Relatórios de Mercadoria Mais Vendidos', action: () => console.log('Relatórios de Mercadoria Mais Vendidos') },
+                { text: 'Mercadoria Esgotando', action: () => console.log('Mercadoria Esgotando') },
+            ]);
+        }
         setOpenModal(true);
     };
 
@@ -86,7 +105,7 @@ function Produtos() {
                 }}
             >
                 <List style={{ margin: "50px 30px", cursor:'pointer' }}>
-                    <ListItem button onClick={() => navigate('/relatorios')}>
+                    <ListItem button onClick={() => handleOpenModal('Relatórios')}>
                         <ListItemText primary="Relatórios" />
                     </ListItem>
 
@@ -123,8 +142,25 @@ function Produtos() {
                         {modalContent}
                     </Typography>
                     <Typography id="modal-description" sx={{ mt: 2 }}>
-                        Este é o modal para {modalContent}.
+                        Selecione uma das opções abaixo.
                     </Typography>
+
+                    {modalButtons.map((button, index) => (
+                        <Button
+                            key={index}
+                            onClick={button.action}
+                            variant="contained"
+                            sx={{
+                                color:"#fff",
+                                bgcolor: '#1b4d93',
+                                mt: 2,
+                                display: 'block',
+                                width: 'max-content' }}
+                        >
+                            {button.text}
+                        </Button>
+                    ))}
+
                     <Button
                         onClick={handleCloseModal}
                         color="secondary"
@@ -136,8 +172,35 @@ function Produtos() {
                 </Box>
             </Modal>
 
+            <Box sx={{ width: '80%', margin: '20px auto' }}>
+                <Typography variant="h1" gutterBottom align="center">
+                    Tabela de Mercadoria
+                </Typography>
+                <TableContainer component={Paper} sx={{ border: '2px solid #1b4d93' }}>
+                    <Table sx={{ border: '2px solid black' }}>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Nome do Item</strong></TableCell>
+                                <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Preço Unitário</strong></TableCell>
+                                <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Quantidade do Item</strong></TableCell>
+                                <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Quantidade no Estoque</strong></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {produtos.map((produto, index) => (
+                                <TableRow key={index}>
+                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>{produto.nome_prod}</TableCell>
+                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>R${produto.preco_unit}</TableCell>
+                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>{produto.quantidade}</TableCell>
+                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>{produto.estoque}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
         </ThemeProvider>
     );
 }
 
-export default Produtos;
+export default Funcionario;

@@ -15,6 +15,8 @@ import CadastroFornecedor from "./CadastroFornecedor";
 import Admin from "./Admin";
 import AdicionarMercadoria from "./AdicionarMercadoria";
 import {CartProvider} from "./CarrinhoContext";
+import RelatorioEsgotado from "./RelatorioEsgotado";
+import RelatorioMercadoria from "./RelatorioMercadoria";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path="/esquecisenha" element={<EsqueciSenha />} />
         <Route path="/cadastroFuncionario" element={<CadastroFuncionario />} />
           <Route path="/cadastroFornecedor" element={<CadastroFornecedor />} />
+        <Route path="/relatorioEsgotado" element={<RelatorioEsgotado />} />
+        <Route path="/relatorioMercadoria" element={<RelatorioMercadoria />} />
           <Route path="/cadastroLote" element={<CadastroLote />} />
         <Route path="/adicionarMercadoria" element={<AdicionarMercadoria />} />
           <Route path="/cadastroNovosProdutos" element={<CadastroNovosProdutos />} />

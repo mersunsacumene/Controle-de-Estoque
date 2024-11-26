@@ -1,6 +1,3 @@
-
 export const checkAuthentication = () => {
-    const token = localStorage.getItem('authToken');
-    return !!token;
+    return !!localStorage.getItem('authToken'); // Retorna true se o token existir
 };
-
