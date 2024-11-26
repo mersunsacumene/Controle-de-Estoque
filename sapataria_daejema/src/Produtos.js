@@ -7,16 +7,30 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useBackground } from "./static/UseBackGround";
 import axios from 'axios';
 import { useContext } from 'react';
-import {CarrinhotContext} from './CarrinhoContext'
+import { CarrinhotContext } from './CarrinhoContext';
 import { useNavigate } from "react-router-dom";
+import { checkAuthentication } from "./Navbar"; // Importa a função de verificação de autenticação
+
 function Produtos() {
     useBackground('favicon2.png');
     const { addToCart } = useContext(CarrinhotContext);
     const navigate = useNavigate();
 
-
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [produtos, setProdutos] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(false); // Estado para verificar a autenticação
+
+    // Função que vai verificar a autenticação no componente
+    const checkAuth = () => {
+        const token = localStorage.getItem('authToken');
+        setIsAuthenticated(!!token);
+    };
+
+    useEffect(() => {
+        checkAuth(); // Verifica a autenticação quando o componente for montado
+
+        fetchProducts(); // Carrega os produtos
+    }, []);
 
     const fetchProducts = async () => {
         try {
@@ -43,18 +57,20 @@ function Produtos() {
         }
     };
 
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-
     const toggleDrawer = (open) => {
         setDrawerOpen(open);
     };
+
     const handleAddToCart = (produto) => {
+        if (!isAuthenticated) {
+            alert("Você precisa estar logado para adicionar produtos ao carrinho!");
+            navigate("/login"); // Redireciona para a página de login se não autenticado
+            return;
+        }
         addToCart(produto);
         console.log("Produto adicionado:", produto);
-        navigate('/carrinho'); // Redireciona para a página do carrinho
     };
+
     const handleTypeClick = (type) => {
         fetchProductsByType(type);
     };
@@ -121,7 +137,7 @@ function Produtos() {
                                             border: '2px solid black',
                                             borderRadius: '99px',
                                         }}
-                                        onClick={() => handleAddToCart(produto)}     >
+                                        onClick={() => handleAddToCart(produto)} >
                                         Adicionar ao Carrinho
                                     </Button>
                                 </CardContent>

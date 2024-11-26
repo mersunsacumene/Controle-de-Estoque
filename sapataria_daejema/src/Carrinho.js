@@ -15,9 +15,6 @@ function Carrinho() {
     const [cupom, setCupom] = useState('');
     const [desconto, setDesconto] = useState(0); // Desconto em valor
 
-    const handleToggleDrawer = () => {
-        setDrawerOpen(!drawerOpen);
-    };
 
     const handleCupomChange = (event) => {
         setCupom(event.target.value);
@@ -62,7 +59,12 @@ function Carrinho() {
                         </Typography>
 
                         <Typography variant="h6" gutterBottom>
-                            Total: R${(produtosCarrinho.reduce((acc, produto) => acc + parseFloat(produto.preco_unit), 0) - desconto).toFixed(2)}
+                            Total: R${(
+                            produtosCarrinho.reduce((acc, produto) => {
+                                const preco = produto.preco_unit ?? produto.valor; // Pega preco_unit se existir, caso contrário, pega valor
+                                return acc + parseFloat(preco); // Adiciona ao acumulador convertendo para número
+                            }, 0) - desconto
+                        ).toFixed(2)}
                         </Typography>
 
                         {/* Campo para inserir o cupom */}
@@ -113,7 +115,7 @@ function Carrinho() {
                         <Card key={produto.id_prod} sx={{ marginBottom: '20px', display: 'flex' }}>
                             <Box
                                 component="img"
-                                src={`http://localhost:5000${produto.url_img}`} // Certifique-se do caminho correto
+                                src={`http://localhost:5000${produto.url_img || produto.imagem}`} // Certifique-se do caminho correto
                                 alt={produto.nome_prod}
                                 sx={{ width: '150px', height: '150px', objectFit: 'cover' }}
                             />
@@ -123,7 +125,7 @@ function Carrinho() {
                                     Marca: {produto.marca_prod || 'Marca não disponível'}
                                 </Typography>
                                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                    R${parseFloat(produto.preco_unit).toFixed(2)}
+                                    R${parseFloat(produto.preco_unit || produto.valor || 0).toFixed(2)}
                                 </Typography>
                                 <Button
                                     variant="contained"

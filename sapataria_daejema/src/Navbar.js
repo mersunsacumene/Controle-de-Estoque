@@ -1,32 +1,26 @@
-import React, {useState, useEffect} from 'react';
-import {AppBar, Toolbar, Modal, Button, Box, ThemeProvider, Typography} from '@mui/material';
+import React, { useContext, useState, useEffect } from 'react';
+import { AppBar, Toolbar, Button, Box, ThemeProvider, Typography, Badge } from '@mui/material';
 import { Link } from 'react-router-dom';
-import threepng from './static/Logo (2).png'
-import {  theme } from "./static/Utils";
+import threepng from './static/Logo (2).png';
+import { theme } from "./static/Utils";
+import { CarrinhotContext } from './CarrinhoContext'; // Importação do contexto
+import { checkAuthentication } from './authUtils'; // Importando a função checkAuthentication
 
 function Navbar() {
-    const [open, setOpen] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(()=> {
-        return !!localStorage.getItem('authToken');
-    });
-
-    const checkAuthentication = () => {
-        const token = localStorage.getItem('authToken');
-        setIsAuthenticated(!!token);
-    };
+    const { produtosCarrinho } = useContext(CarrinhotContext); // Acessando produtosCarrinho
+    const [isAuthenticated, setIsAuthenticated] = useState(() => checkAuthentication()); // Usando checkAuthentication
 
     useEffect(() => {
         const handleStorageChange = () => {
-            checkAuthentication();
+            setIsAuthenticated(checkAuthentication());
         };
+
         window.addEventListener('storage', handleStorageChange);
+
         return () => {
             window.removeEventListener('storage', handleStorageChange);
         };
     }, []);
-
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
 
     const logout = () => {
         localStorage.removeItem('authToken');
@@ -49,15 +43,17 @@ function Navbar() {
         }
         return (
             <Box>
-                <Button color="primary" component={Link} to="/carrinho">
-                    <Typography variant="h6">Carrinho</Typography>
-                </Button>
+                <Badge badgeContent={produtosCarrinho.length} color="error" overlap="circular" max={99}>
+                    <Button color="primary" component={Link} to="/carrinho">
+                        <Typography variant="h6">Carrinho</Typography>
+                    </Button>
+                </Badge>
                 <Button color="primary" onClick={logout}>
                     <Typography variant="h6">Sair</Typography>
                 </Button>
             </Box>
         );
-    }
+    };
 
     return (
         <ThemeProvider theme={theme}>

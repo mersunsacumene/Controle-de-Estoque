@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Carousel from 'react-material-ui-carousel';
 import { Box, Card, CardContent, Typography, Button, Grid } from '@mui/material';
 import axios from 'axios';
+import {CarrinhotContext} from './CarrinhoContext'
+import { useNavigate } from "react-router-dom";
 
 // Função para agrupar produtos em lotes
 const agruparProdutos = (produtos, tamanhoGrupo) => {
@@ -12,9 +14,10 @@ const agruparProdutos = (produtos, tamanhoGrupo) => {
     return grupos;
 };
 
+
+
 function Carroussel() {
     const [produtos, setProdutos] = useState([]);
-
     // Simulação de 20 produtos
     useEffect(() => {
         // Fazendo a requisição para buscar as promoções
@@ -71,6 +74,20 @@ function Carroussel() {
 }
 
 function ProdutoGrid({ produtos }) {
+    const { addToCart } = useContext(CarrinhotContext);
+    const navigate = useNavigate();
+    const [isAuthenticated] = useState(false); // Estado para verificar a autenticação
+
+    const handleAddToCart = (produto) => {
+        if (!isAuthenticated) {
+            alert("Você precisa estar logado para adicionar produtos ao carrinho!");
+            navigate("/login"); // Redireciona para a página de login se não autenticado
+            return;
+        }
+        addToCart(produto);
+        console.log("Produto adicionado:", produto);
+    };
+
     return (
         <Grid
             container
@@ -120,7 +137,7 @@ function ProdutoGrid({ produtos }) {
                             <Typography variant="h6" style={{ fontWeight: 'bold' }}>
                                 {produto.valor}
                             </Typography>
-                            <Button
+                            <Button onClick={()=> handleAddToCart(produto)}
                                 style={{
                                     background: '#1b4d93',
                                     color: 'white',
