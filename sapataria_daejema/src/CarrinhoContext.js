@@ -6,44 +6,36 @@ export const CartProvider = ({ children }) => {
     const [produtosCarrinho, setProdutosCarrinho] = useState([]);
 
     const addToCart = (produto) => {
-        setProdutosCarrinho((prev) => {
-            const existingProduct = prev.find(item => item.id_prod === produto.id_prod);
-            if (existingProduct) {
-                // Se o produto já estiver no carrinho, aumente a quantidade
-                return prev.map(item =>
-                    item.id_prod === produto.id_prod
-                        ? { ...item, quantidade: item.quantidade + 1 }
-                        : item
-                );
-            } else {
-                // Se não estiver no carrinho, adicione o produto com quantidade 1
-                return [...prev, { ...produto, quantidade: 1 }];
-            }
-        });
+        // Verifica se o produto já existe no carrinho com base no id_prod
+        const produtoExistente = produtosCarrinho.find((item) => item.produto.id_prod === produto.produto.id_prod);
+
+        if (produtoExistente) {
+            console.log("Produto já está no carrinho:", produto.produto.id_prod);
+            return; // Não adiciona o produto se ele já estiver no carrinho
+        }
+
+        console.log("Antes de adicionar:", produtosCarrinho); // Estado atual
+        setProdutosCarrinho((prev) => [...prev, produto]);
+        console.log("Depois de adicionar:", [...produtosCarrinho, produto]);
     };
-    const updateQuantity = (produtoId, newQuantity) => {
-        setProdutosCarrinho((prevProdutos) => {
-            return prevProdutos.map((produto) =>
-                produto.id_prod === produtoId
+    const clearCart = () => {
+        setProdutosCarrinho([]);
+    };
+    const removeFromCart = (id_prod) => {
+        setProdutosCarrinho((prev) => prev.filter((produto) => produto.produto.id_prod !== id_prod));
+    };
+    const updateProductQuantity = (produtoId, newQuantity) => {
+        setProdutosCarrinho((prev) =>
+            prev.map((produto) =>
+                produto.produto.id_prod === produtoId
                     ? { ...produto, quantidade: newQuantity }
                     : produto
-            );
-        });
+            )
+        );
     };
-
-
-    const removeFromCart = (id_prod) => {
-        setProdutosCarrinho((prev) => {
-            const updatedCarrinho = prev.map(item =>
-                item.id_prod === id_prod ? { ...item, quantidade: 0 } : item
-            ).filter(item => item.quantidade > 0); // Remove os itens com quantidade 0
-            return updatedCarrinho;
-        });
-    };
-
 
     return (
-        <CarrinhotContext.Provider value={{ produtosCarrinho, addToCart, removeFromCart }}>
+        <CarrinhotContext.Provider value={{ produtosCarrinho, addToCart, removeFromCart,updateProductQuantity,clearCart }}>
             {children}
         </CarrinhotContext.Provider>
     );

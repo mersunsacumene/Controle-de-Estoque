@@ -21,7 +21,6 @@ function CadastroNovosProdutos() {
     const [formData, setFormData] = useState({
         nome_prod: "",
         marca_prod: "",
-        quantidade: "",
         tamanho: "",
         cor: "",
         quant_atual: "",
@@ -77,9 +76,6 @@ function CadastroNovosProdutos() {
         if (!formData.marca_prod.trim()) {
             newErrors.marca_prod = "A marca do produto é obrigatória.";
         }
-        if (!formData.quantidade.trim()) {
-            newErrors.quantidade = "A quantidade é obrigatória.";
-        }
         if (!formData.tamanho) {
             newErrors.tamanho = "O tamanho é obrigatório.";
         }
@@ -119,7 +115,6 @@ function CadastroNovosProdutos() {
             try {
                 const formDataToSend = new FormData();
                 formDataToSend.append("nome_prod", formData.nome_prod);
-                formDataToSend.append("quantidade", formData.quantidade);
                 formDataToSend.append("marca_prod", formData.marca_prod)
                 formDataToSend.append("preco_unit", formData.preco_unit);
                 formDataToSend.append("quant_atual", formData.quant_atual);
@@ -213,18 +208,6 @@ function CadastroNovosProdutos() {
                         error={!!errors.marca_prod}
                         helperText={errors.marca_prod}
                     />
-                    <TextField
-                        label="Quantidade do Item:"
-                        name="quantidade"
-                        fullWidth
-                        color="secondary"
-                        margin="normal"
-                        value={formData.quantidade}
-                        onChange={handleChange}
-                        error={!!errors.quantidade}
-                        helperText={errors.quantidade}
-                    />
-
                     <TextField
                         label="Preço Unitário"
                         name="preco_unit"

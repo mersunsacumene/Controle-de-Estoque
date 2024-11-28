@@ -34,9 +34,10 @@ function Produtos() {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/produto/produtos', {
+            const response = await axios.get('http://localhost:5000/estoque/produtosEstoque', {
                 headers: { "Content-Type": "application/json" }
             });
+            console.log("Produtos com quantidade em estoque:", response.data);
             setProdutos(response.data);
         } catch (erro) {
             console.log("Erro ao carregar os produtos: ", erro);
@@ -123,12 +124,15 @@ function Produtos() {
                                 borderRadius: '24px',
                             }}>
                                 <CardContent style={{ textAlign: 'center' }}>
-                                    <Typography component="img" src={`http://localhost:5000${produto.url_img}`} alt={produto.nome_prod} sx={{ width: '100%', objectFit: 'cover' }} />
+                                    <Typography component="img" src={`http://localhost:5000${produto.produto.url_img}`} alt={produto.produto.nome_prod} sx={{ width: '100%', objectFit: 'cover' }} />
                                     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                        {produto.nome_prod}
+                                        {produto.produto.nome_prod}
                                     </Typography>
                                     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                        Valor Unitário: R${produto.preco_unit}
+                                        Valor Unitário: R${produto.produto.preco_unit}
+                                    </Typography>
+                                    <Typography variant="h6">
+                                        Quantidade em Estoque: {produto.quantidade}
                                     </Typography>
                                     <Button
                                         style={{
@@ -137,7 +141,7 @@ function Produtos() {
                                             border: '2px solid black',
                                             borderRadius: '99px',
                                         }}
-                                        onClick={() => handleAddToCart(produto)} >
+                                        onClick={() => handleAddToCart(produto)}>
                                         Adicionar ao Carrinho
                                     </Button>
                                 </CardContent>
@@ -146,7 +150,6 @@ function Produtos() {
                     ))}
                 </Grid>
             </Box>
-
         </ThemeProvider>
     );
 }

@@ -28,26 +28,27 @@ function Funcionario() {
     useBackground('favicon2.png');
 
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [produtos, setProdutos] = useState([]);
+    const [produtosComEstoque, setProdutosComEstoque] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [modalContent, setModalContent] = useState('');
     const [modalButtons, setModalButtons] = useState([]);
     const navigate = useNavigate();
 
-    const fetchProducts = async () => {
+    const fetchProductsWithEstoque = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/produto/produtos', {
+            // Chama a API para obter produtos com estoque
+            const response = await axios.get('http://localhost:5000/estoque/estoques', {
                 headers: { "Content-Type": "application/json" }
             });
             console.log(response.data);
-            setProdutos(response.data);
+            setProdutosComEstoque(response.data);
         } catch (erro) {
-            console.log("Erro ao carregar os produtos: ", erro);
+            console.log("Erro ao carregar os produtos com estoque: ", erro);
         }
     };
 
     useEffect(() => {
-        fetchProducts();
+        fetchProductsWithEstoque();
     }, []);
 
     const toggleDrawer = (open) => {
@@ -60,7 +61,7 @@ function Funcionario() {
             setModalButtons([
                 { text: 'Cadastrar Fornecedor', action: () => navigate('/cadastroFornecedor') },
                 { text: 'Cadastrar Lote', action: () => navigate('/cadastroLote') },
-                {text: 'Cadastrar Produto', action: () => navigate('/cadastroNovosProdutos')}
+                { text: 'Cadastrar Produto', action: () => navigate('/cadastroNovosProdutos') }
             ]);
         } else if (content === 'Relatórios') {
             setModalButtons([
@@ -110,7 +111,7 @@ function Funcionario() {
                     },
                 }}
             >
-                <List style={{ margin: "50px 30px", cursor:'pointer' }}>
+                <List style={{ margin: "50px 30px", cursor: 'pointer' }}>
                     <ListItem button onClick={() => handleOpenModal('Relatórios')}>
                         <ListItemText primary="Relatórios" />
                     </ListItem>
@@ -157,11 +158,12 @@ function Funcionario() {
                             onClick={button.action}
                             variant="contained"
                             sx={{
-                                color:"#fff",
+                                color: "#fff",
                                 bgcolor: '#1b4d93',
                                 mt: 2,
                                 display: 'block',
-                                width: 'max-content' }}
+                                width: 'max-content'
+                            }}
                         >
                             {button.text}
                         </Button>
@@ -179,7 +181,7 @@ function Funcionario() {
             </Modal>
 
             <Box sx={{ width: '80%', margin: '20px auto' }}>
-                <Typography variant="h1" gutterBottom align="center" color="black" >
+                <Typography variant="h1" gutterBottom align="center" color="black">
                     Tabela de Mercadoria
                 </Typography>
                 <TableContainer component={Paper} sx={{ border: '2px solid #1b4d93' }}>
@@ -188,17 +190,39 @@ function Funcionario() {
                             <TableRow>
                                 <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Nome do Item</strong></TableCell>
                                 <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Preço Unitário</strong></TableCell>
-                                <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Quantidade do Item</strong></TableCell>
                                 <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Quantidade no Estoque</strong></TableCell>
+                                <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}><strong>Quantidade Mínima</strong></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {produtos.map((produto, index) => (
+                            {produtosComEstoque.map((item, index) => (
                                 <TableRow key={index}>
-                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>{produto.nome_prod}</TableCell>
-                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>R${produto.preco_unit}</TableCell>
-                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>{produto.quantidade}</TableCell>
-                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>{produto.estoque}</TableCell>
+                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>
+                                        {item.produto ? item.produto.nome_prod : 'Produto não encontrado'}
+                                    </TableCell>
+                                    <TableCell align="center" sx={{ border: '2px solid #1b4d93' }}>
+                                        R${item.produto ? item.produto.preco_unit : 'N/A'}
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        sx={{
+                                            border: '2px solid #1b4d93',
+                                            backgroundColor: item.quantidade < item.quant_min ? '#f8d7da' : 'inherit',
+                                            color: item.quantidade < item.quant_min ? '#721c24' : 'inherit',
+                                        }}
+                                    >
+                                        {item.quantidade}
+                                    </TableCell>
+                                    <TableCell
+                                        align="center"
+                                        sx={{
+                                            border: '2px solid #1b4d93',
+                                            backgroundColor: item.quantidade < item.quant_min ? '#f8d7da' : 'inherit',
+                                            color: item.quantidade < item.quant_min ? '#721c24' : 'inherit',
+                                        }}
+                                    >
+                                        {item.quant_min}
+                                    </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
