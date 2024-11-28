@@ -67,6 +67,11 @@ function Funcionario() {
                 { text: 'Relatórios de Mercadoria Mais Vendidos', action: () => console.log('Relatórios de Mercadoria Mais Vendidos') },
                 { text: 'Mercadoria Esgotando', action: () => console.log('Mercadoria Esgotando') },
             ]);
+        } else if (content === 'Adicionar Mercadoria') {
+            setModalButtons([
+                { text: 'Adicionar Mercadoria Estoque', action: () => navigate('/adicionarMercadoria') },
+                { text: 'Adicionar Mercadoria Promoção', action: () => console.log('/adicionarMercadoria') },
+            ]);
         }
         setOpenModal(true);
     };
@@ -114,7 +119,7 @@ function Funcionario() {
                         <ListItemText primary="Cadastros" />
                     </ListItem>
 
-                    <ListItem button onClick={() => navigate('/adicionarMercadoria')}>
+                    <ListItem button onClick={() => handleOpenModal('Adicionar Mercadoria')}>
                         <ListItemText primary="Adicionar Mercadoria" />
                     </ListItem>
                 </List>
