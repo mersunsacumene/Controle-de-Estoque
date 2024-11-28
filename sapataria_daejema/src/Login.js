@@ -38,31 +38,42 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      try{
+      try {
         const response = await axios.post("http://127.0.0.1:5000/usuario/login", {
           email: formValues.email,
           password: formValues.password,
-        },{headers: {"Content-Type": "application/json"}});
-        console.log(response.data)
+        }, { headers: { "Content-Type": "application/json" } });
+
+        console.log(response.data);
         setLoginMessage(response.data.message);
+
         if (response.data.token) {
           localStorage.setItem("authToken", response.data.token);
-
-          window.dispatchEvent(new Event('storage'));
+          localStorage.setItem("userRole", response.data.role); // Salva o role do usuário
+          window.dispatchEvent(new Event('storage')); // Atualiza os eventos de storage
         }
 
+        // Limpa os campos de login
         setFormValues({
           email: "",
           password: "",
         });
-        navigate("/");
-      }catch (error) {
-        console.log('got error', error.message, error.response)
+
+        if (response.data.role === 'funcionario') {
+          navigate('/funcionario');
+        } else if (response.data.role === 'adming') {
+          navigate('/adming');
+        } else {
+          navigate('/');
+        }
+      } catch (error) {
+        console.log('Erro', error.message, error.response);
         const errorMsg = error.response?.data?.error || "Erro desconhecido.";
         setLoginMessage(errorMsg);
       }
-      }
+    }
   };
+
 
   return (
       <ThemeProvider theme={theme}>

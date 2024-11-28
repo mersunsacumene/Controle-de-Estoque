@@ -13,6 +13,8 @@ function Navbar() {
     const location = useLocation();
     const navigate = useNavigate();
     const [openLoginModal, setOpenLoginModal] = useState(false);
+
+
     useEffect(() => {
         const handleStorageChange = () => {
             setIsAuthenticated(checkAuthentication());
@@ -32,12 +34,13 @@ function Navbar() {
         setIsAuthenticated(true);
 
         if (role === 'funcionario') {
-            navigate('/funcionario');
+            navigate('/login');
         } else if (role === 'adming') {
             navigate('/adming');
         } else {
             navigate('/');
         }
+        handleCloseLoginModal();
     };
 
     const handleOpenLoginModal = () => {
