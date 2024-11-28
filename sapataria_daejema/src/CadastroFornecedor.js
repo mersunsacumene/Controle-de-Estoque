@@ -8,8 +8,6 @@ function CadastroNovosProdutos() {
 
     const [formData, setFormData] = useState({
         cnpj: "",
-        name: "",
-        email: "",
     });
 
     const [errors, setErrors] = useState({});
@@ -31,15 +29,6 @@ function CadastroNovosProdutos() {
             newErrors.cnpj = "CNPJ deve conter 14 números.";
         }
 
-        if (!formData.name.trim()) {
-            newErrors.name = "O nome é obrigatório.";
-        }
-
-        if (!formData.email.trim()) {
-            newErrors.email = "O email é obrigatório.";
-        } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = "O email não é válido.";
-        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -91,29 +80,6 @@ function CadastroNovosProdutos() {
                         error={!!errors.cnpj}
                         helperText={errors.cnpj}
                     />
-                    <TextField
-                        label="Nome Completo:"
-                        name="name"
-                        fullWidth
-                        color="secondary"
-                        margin="normal"
-                        value={formData.name}
-                        onChange={handleChange}
-                        error={!!errors.name}
-                        helperText={errors.name}
-                    />
-                    <TextField
-                        label="Email:"
-                        name="email"
-                        fullWidth
-                        color="secondary"
-                        margin="normal"
-                        value={formData.email}
-                        onChange={handleChange}
-                        error={!!errors.email}
-                        helperText={errors.email}
-                    />
-
                     <Button
                         type="submit"
                         variant="contained"

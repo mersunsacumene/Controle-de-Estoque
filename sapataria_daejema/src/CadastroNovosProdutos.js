@@ -19,99 +19,151 @@ function CadastroNovosProdutos() {
     useBackground("favicon2.png");
 
     const [formData, setFormData] = useState({
-        cnpj: "",
-        lote: "",
-        name: "",
+        nome_prod: "",
+        marca_prod: "",
         quantidade: "",
         tamanho: "",
         cor: "",
+        quant_atual: "",
+        quant_min: "",
+        quant_max: "",
+        genero: "",
+        preco_unit: "",
+        lote: "",
+        imagem: null,
     });
 
     const [errors, setErrors] = useState({});
-    const [isCnpjValid, setIsCnpjValid] = useState(false); // Estado para controlar a validação do CNPJ
+    const [lotes, setLotes] = useState([]);
+    const [loadingLotes, setLoadingLotes] = useState(true);
+    const [lotesError, setLotesError] = useState("");
 
-    // Atualizar o estado do formulário conforme o usuário digita
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-    // Função para verificar se o CNPJ já está cadastrado no banco
-    const checkCnpj = async () => {
-        if (formData.cnpj.length === 14) { // Verifica o CNPJ somente quando ele tiver 14 caracteres
+    useEffect(() => {
+        const fetchLotes = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/checkCNPJ/${formData.cnpj}`);
-                if (response.data.exists) {
-                    setIsCnpjValid(true); // CNPJ existe, podemos liberar os campos
-                } else {
-                    setIsCnpjValid(false); // CNPJ não encontrado
-                    setErrors((prevErrors) => ({
-                        ...prevErrors,
-                        cnpj: "CNPJ não encontrado no banco de dados.",
-                    }));
-                }
+                const response = await axios.get("http://localhost:5000/lote/lotes");
+                setLotes(response.data);
+                setLoadingLotes(false);
             } catch (error) {
-                console.error("Erro ao verificar o CNPJ:", error);
-                setIsCnpjValid(false);
+                console.error("Erro ao buscar lotes:", error);
+                setLotesError("Erro ao carregar lotes");
+                setLoadingLotes(false);
             }
+        };
+
+        fetchLotes();
+    }, []);
+
+    const handleChange = (e) => {
+        const { name, value, files } = e.target;
+        if (name === "imagem") {
+            setFormData((prevData) => ({
+                ...prevData,
+                imagem: files[0],
+            }));
+        } else {
+            setFormData((prevData) => ({
+                ...prevData,
+                [name]: value,
+            }));
         }
     };
 
-    // Validar os dados antes de enviar
     const validate = () => {
         const newErrors = {};
-
-        if (!formData.cnpj.trim()) {
-            newErrors.cnpj = "CNPJ é obrigatório.";
-        } else if (!/^\d{14g}$/.test(formData.cnpj)) {
-            newErrors.cnpj = "O CNPJ deve conter exatamente 14 números.";
+        if (!formData.nome_prod.trim()) {
+            newErrors.nome_prod = "O nome do item é obrigatório.";
         }
-
-        if (!isCnpjValid) {
-            newErrors.cnpj = "O CNPJ deve ser válido para continuar.";
+        if (!formData.marca_prod.trim()) {
+            newErrors.marca_prod = "A marca do produto é obrigatória.";
         }
-
-        if (!formData.name.trim()) {
-            newErrors.name = "O nome do item é obrigatório.";
-        }
-
         if (!formData.quantidade.trim()) {
             newErrors.quantidade = "A quantidade é obrigatória.";
         }
-
         if (!formData.tamanho) {
             newErrors.tamanho = "O tamanho é obrigatório.";
         }
-
         if (!formData.cor) {
             newErrors.cor = "A cor é obrigatória.";
         }
-
-        if (formData.lote && !isCnpjValid) {
-            newErrors.lote = "O lote só pode ser informado se o CNPJ for válido.";
+        if (!formData.quant_atual || formData.quant_atual <= 0) {
+            newErrors.quant_atual = "A quantidade atual é obrigatória e deve ser maior que zero.";
+        }
+        if (!formData.quant_min || formData.quant_min <= 0) {
+            newErrors.quant_min = "A quantidade mínima é obrigatória e deve ser maior que zero.";
+        }
+        if (!formData.quant_max || formData.quant_max <= 0) {
+            newErrors.quant_max = "A quantidade máxima é obrigatória e deve ser maior que zero.";
+        }
+        if (!formData.lote) {
+            newErrors.lote = "O número do lote é obrigatório.";
+        }
+        if (!formData.genero) {
+            newErrors.genero = "O gênero é obrigatório.";
+        }
+        if (!formData.preco_unit || formData.preco_unit <= 0) {
+            newErrors.preco_unit = "O preço unitário é obrigatório e deve ser maior que zero.";
+        }
+        if (!formData.imagem) {
+            newErrors.imagem = "A imagem do produto é obrigatória.";
         }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (validate()) {
-            console.log("Dados válidos:", formData);
+            try {
+                const formDataToSend = new FormData();
+                formDataToSend.append("nome_prod", formData.nome_prod);
+                formDataToSend.append("quantidade", formData.quantidade);
+                formDataToSend.append("marca_prod", formData.marca_prod)
+                formDataToSend.append("preco_unit", formData.preco_unit);
+                formDataToSend.append("quant_atual", formData.quant_atual);
+                formDataToSend.append("quant_min", formData.quant_min);
+                formDataToSend.append("quant_max", formData.quant_max);
+                formDataToSend.append("cor", formData.cor);
+                formDataToSend.append("tamanho", formData.tamanho);
+                formDataToSend.append("genero", formData.genero);
+                formDataToSend.append("num_lote", formData.lote.num_lote);
+                formDataToSend.append("imagem", formData.imagem);
+
+                const produtoResponse = await axios.post("http://localhost:5000/produto/cadastro", formDataToSend, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+                if (produtoResponse.status === 201) {
+                    const estoqueData = {
+                        id_prod: produtoResponse.data.data,
+                        quant_atual: formData.quant_atual,
+                        quant_max: formData.quant_max,
+                        quant_min: formData.quant_min,
+                        cor: formData.cor,
+                        tipo:formData.lote.tipo_recebido,
+                        genero:formData.genero,
+                        tamanho: formData.tamanho,
+                    };
+
+                    const estoqueResponse = await axios.post("http://localhost:5000/estoque/cadastro", estoqueData);
+
+                    if (estoqueResponse.status === 201) {
+                        alert("Produto e Estoque cadastrados com sucesso!");
+                    } else {
+                        alert("Erro ao cadastrar estoque.");
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao cadastrar produto e estoque:", error);
+                alert("Erro ao cadastrar produto e estoque.");
+            }
         } else {
             console.log("Erro na validação:", errors);
         }
     };
-
-    useEffect(() => {
-        checkCnpj();
-    }, [formData.cnpj]);
 
     return (
         <ThemeProvider theme={theme}>
@@ -139,113 +191,173 @@ function CadastroNovosProdutos() {
                         Cadastro de Mercadoria
                     </Typography>
 
+                    {/* Formulário do Produto */}
                     <TextField
-                        label="CNPJ:"
-                        name="cnpj"
+                        label="Nome do Item:"
+                        name="nome_prod"
                         fullWidth
                         color="secondary"
                         margin="normal"
-                        value={formData.cnpj}
-                        onChange={(e) => {
-                            const value = e.target.value.replace(/\D/g, ''); // Remover tudo que não for número
-                            if (value.length <= 14) {  // Limitar a 14 caracteres
-                                setFormData({
-                                    ...formData,
-                                    cnpj: value,
-                                });
-                            }
-                        }}
-                        error={!!errors.cnpj}
-                        helperText={errors.cnpj}
+                        value={formData.nome_prod}
+                        onChange={handleChange}
+                        error={!!errors.nome_prod}
+                        helperText={errors.nome_prod}
+                    />
+                    <TextField
+                        label="Marca do Produto"
+                        name="marca_prod"
+                        fullWidth
+                        color="secondary"
+                        margin="normal"
+                        value={formData.marca_prod}
+                        onChange={handleChange}
+                        error={!!errors.marca_prod}
+                        helperText={errors.marca_prod}
+                    />
+                    <TextField
+                        label="Quantidade do Item:"
+                        name="quantidade"
+                        fullWidth
+                        color="secondary"
+                        margin="normal"
+                        value={formData.quantidade}
+                        onChange={handleChange}
+                        error={!!errors.quantidade}
+                        helperText={errors.quantidade}
                     />
 
-                    {/* Só mostrar os outros campos se o CNPJ for válido */}
-                    {isCnpjValid && (
-                        <>
-                            <TextField
-                                label="Número do Lote:"
-                                name="lote"
-                                fullWidth
-                                color="secondary"
-                                margin="normal"
-                                value={formData.lote}
-                                onChange={handleChange}
-                                error={!!errors.lote}
-                                helperText={errors.lote}
-                            />
-
-                            <TextField
-                                label="Nome do Item:"
-                                name="name"
-                                fullWidth
-                                color="secondary"
-                                margin="normal"
-                                value={formData.name}
-                                onChange={handleChange}
-                                error={!!errors.name}
-                                helperText={errors.name}
-                            />
-
-                            <TextField
-                                label="Quantidade do Item:"
-                                name="quantidade"
-                                fullWidth
-                                color="secondary"
-                                margin="normal"
-                                value={formData.quantidade}
-                                onChange={handleChange}
-                                error={!!errors.quantidade}
-                                helperText={errors.quantidade}
-                            />
-
-                            {/* Select para Tamanho */}
-                            <FormControl fullWidth margin="normal">
-                                <InputLabel>Tamanho</InputLabel>
-                                <Select
-                                    name="tamanho"
-                                    value={formData.tamanho}
-                                    onChange={handleChange}
-                                    error={!!errors.tamanho}
-                                >
-                                    {[38, 39, 40, 41].map((size) => (
-                                        <MenuItem key={size} value={size}>
-                                            {size}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                {errors.tamanho && <Typography color="error">{errors.tamanho}</Typography>}
-                            </FormControl>
-
-                            {/* Select para Cor */}
-                            <FormControl fullWidth margin="normal">
-                                <InputLabel>Cor</InputLabel>
-                                <Select
-                                    name="cor"
-                                    value={formData.cor}
-                                    onChange={handleChange}
-                                    error={!!errors.cor}
-                                >
-                                    {["Preto", "Azul", "Branco"].map((color) => (
-                                        <MenuItem key={color} value={color}>
-                                            {color}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                {errors.cor && <Typography color="error">{errors.cor}</Typography>}
-                            </FormControl>
-                        </>
-                    )}
-
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="secondary"
+                    <TextField
+                        label="Preço Unitário"
+                        name="preco_unit"
+                        type="number"
                         fullWidth
-                        sx={{ mt: 3 }}
-                        onClick={handleSubmit}
-                        disabled={!isCnpjValid} // Desabilitar o botão de cadastro até o CNPJ ser validado
-                    >
-                        Cadastrar
+                        color="secondary"
+                        margin="normal"
+                        value={formData.preco_unit}
+                        onChange={handleChange}
+                        error={!!errors.preco_unit}
+                        helperText={errors.preco_unit}
+                    />
+
+                    <TextField
+                        label="Quantidade Atual"
+                        name="quant_atual"
+                        type="number"
+                        fullWidth
+                        color="secondary"
+                        margin="normal"
+                        value={formData.quant_atual}
+                        onChange={handleChange}
+                        error={!!errors.quant_atual}
+                        helperText={errors.quant_atual}
+                    />
+
+                    <TextField
+                        label="Quantidade Mínima"
+                        name="quant_min"
+                        type="number"
+                        fullWidth
+                        color="secondary"
+                        margin="normal"
+                        value={formData.quant_min}
+                        onChange={handleChange}
+                        error={!!errors.quant_min}
+                        helperText={errors.quant_min}
+                    />
+
+                    <TextField
+                        label="Quantidade Máxima"
+                        name="quant_max"
+                        type="number"
+                        fullWidth
+                        color="secondary"
+                        margin="normal"
+                        value={formData.quant_max}
+                        onChange={handleChange}
+                        error={!!errors.quant_max}
+                        helperText={errors.quant_max}
+                    />
+
+                    {/* Campo de Cor */}
+                    <FormControl fullWidth margin="normal" error={!!errors.cor}>
+                        <InputLabel>Cor</InputLabel>
+                        <Select
+                            label="Cor"
+                            name="cor"
+                            value={formData.cor}
+                            onChange={handleChange}>
+                            <MenuItem value="azul">Azul</MenuItem>
+                            <MenuItem value="preto">Preto</MenuItem>
+                            <MenuItem value="branco">Branco</MenuItem>
+                        </Select>
+                        {errors.cor && <Typography variant="body2">{errors.cor}</Typography>}
+                    </FormControl>
+
+                    {/* Campo de Tamanho */}
+                    <FormControl fullWidth margin="normal" error={!!errors.tamanho}>
+                        <InputLabel>Tamanho</InputLabel>
+                        <Select
+                            label="Tamanho"
+                            name="tamanho"
+                            value={formData.tamanho}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="38">38</MenuItem>
+                            <MenuItem value="39">39</MenuItem>
+                            <MenuItem value="40">40</MenuItem>
+                            <MenuItem value="41">41</MenuItem>
+                        </Select>
+                        {errors.tamanho && <Typography variant="body2">{errors.tamanho}</Typography>}
+                    </FormControl>
+
+                    {/* Campo de Gênero */}
+                    <FormControl fullWidth margin="normal" error={!!errors.genero}>
+                        <InputLabel>Gênero</InputLabel>
+                        <Select
+                            label="Gênero"
+                            name="genero"
+                            value={formData.genero}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="Masculino">Masculino</MenuItem>
+                            <MenuItem value="Feminino">Feminino</MenuItem>
+                        </Select>
+                        {errors.genero && <Typography variant="body2">{errors.genero}</Typography>}
+                    </FormControl>
+
+                    <FormControl fullWidth margin="normal" error={!!errors.lote}>
+                        <InputLabel>Lote</InputLabel>
+                        <Select
+                            label="Lote"
+                            name="lote"
+                            value={formData.lote}
+                            onChange={handleChange}
+                        >
+                            {lotes.length > 0 ? (
+                                lotes.map((lote) => (
+                                    <MenuItem key={lote.num_lote} value={lote}>
+                                        {lote.num_lote}
+                                    </MenuItem>
+                                ))
+                            ) : (
+                                <MenuItem value="">Nenhum lote disponível</MenuItem>
+                            )}
+                        </Select>
+                        {errors.lote && <Typography variant="body2">{errors.lote}</Typography>}
+                    </FormControl>
+
+                    {/* Campo de imagem */}
+                    <input
+                        type="file"
+                        name="imagem"
+                        accept="image/*"
+                        onChange={handleChange}
+                    />
+
+                    {errors.imagem && <Typography variant="body2" color="error">{errors.imagem}</Typography>}
+
+                    <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
+                        Cadastrar Produto
                     </Button>
                 </Box>
             </Container>

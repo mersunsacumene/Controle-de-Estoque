@@ -59,7 +59,8 @@ function Funcionario() {
         if (content === 'Cadastrar') {
             setModalButtons([
                 { text: 'Cadastrar Fornecedor', action: () => navigate('/cadastroFornecedor') },
-                { text: 'Cadastrar Produto', action: () => navigate('/cadastroNovosProdutos') },
+                { text: 'Cadastrar Lote', action: () => navigate('/cadastroLote') },
+                {text: 'Cadastrar Produto', action: () => navigate('/cadastroNovosProdutos')}
             ]);
         } else if (content === 'Relatórios') {
             setModalButtons([
@@ -173,7 +174,7 @@ function Funcionario() {
             </Modal>
 
             <Box sx={{ width: '80%', margin: '20px auto' }}>
-                <Typography variant="h1" gutterBottom align="center">
+                <Typography variant="h1" gutterBottom align="center" color="black" >
                     Tabela de Mercadoria
                 </Typography>
                 <TableContainer component={Paper} sx={{ border: '2px solid #1b4d93' }}>
