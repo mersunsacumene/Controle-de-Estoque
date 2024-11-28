@@ -4,9 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, BarElement, CategoryScale, LinearScale, PointElement } from 'chart.js';
 import DrawerAdmin from "./DrawerAdmin";
-import { useBackground } from "./static/UseBackGround";
 
-// Registra os componentes do Chart.js necessários
 ChartJS.register(Title, Tooltip, Legend, LineElement, BarElement, CategoryScale, LinearScale, PointElement);
 
 function Admin() {
@@ -40,18 +38,15 @@ function Admin() {
         Dec: Array.from({ length: 31 }, (_, i) => Math.floor(Math.random() * 1000) + 100),
     };
 
-    // Estado para o mês selecionado e dados do gráfico mensal
     const [mesSelecionado, setMesSelecionado] = useState('Jan');
     const [dadosGrafico, setDadosGrafico] = useState(vendasDiarias[mesSelecionado]);
 
-    // Função para atualizar o gráfico com base no mês selecionado
     const handleChangeMes = (event) => {
         const mes = event.target.value;
         setMesSelecionado(mes);
         setDadosGrafico(vendasDiarias[mes]);
     };
 
-    // Dados do gráfico anual
     const dataAnual = {
         labels: vendasAnuais.map(item => item.mes),
         datasets: [
@@ -66,7 +61,6 @@ function Admin() {
         ],
     };
 
-    // Opções do gráfico anual
     const optionsAnual = {
         responsive: true,
         scales: {
@@ -76,7 +70,6 @@ function Admin() {
         },
     };
 
-    // Dados do gráfico mensal
     const dataMensal = {
         labels: Array.from({ length: new Date(2024, new Date().getMonth(), 0).getDate() }, (_, i) => i + 1),
         datasets: [
@@ -90,7 +83,6 @@ function Admin() {
         ],
     };
 
-    // Opções do gráfico mensal
     const optionsMensal = {
         responsive: true,
         scales: {
@@ -106,38 +98,35 @@ function Admin() {
     return (
         <Box sx={{ marginLeft: '90px', padding: '20px', margin:'auto' }}>
             <DrawerAdmin>
-            <div id="graficoAnual">
-                <Typography variant="h1" gutterBottom>
-                    Gráfico de Vendas Anuais
-                </Typography>
-                <Line data={dataAnual} options={optionsAnual} />
-            </div>
+                <div id="graficoMensal">
+                    <Typography variant="h2" gutterBottom sx={{marginTop: 5}}>
+                        Gráfico de Vendas Mensais
+                    </Typography>
 
-            <div id="graficoMensal">
-                <Typography variant="h1" gutterBottom sx={{ marginTop: 5 }}>
-                    Gráfico de Vendas Mensais
-                </Typography>
+                    <FormControl fullWidth sx={{marginBottom: 3}}>
+                        <InputLabel id="select-month-label">Escolha um Mês</InputLabel>
+                        <Select
+                            labelId="select-month-label"
+                            value={mesSelecionado}
+                            onChange={handleChangeMes}
+                            label="Escolha um Mês"
+                        >
+                            {Object.keys(vendasDiarias).map((mes, index) => (
+                                <MenuItem key={index} value={mes}>
+                                    {mes}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <Bar data={dataMensal} options={optionsMensal}/>
+                    <div id="graficoAnual">
+                        <Typography variant="h2" gutterBottom>
+                            Gráfico de Vendas Anuais
+                        </Typography>
+                        <Line data={dataAnual} options={optionsAnual}/>
+                    </div>
 
-                {/* Select para escolher o mês */}
-                <FormControl fullWidth sx={{ marginBottom: 3 }}>
-                    <InputLabel id="select-month-label">Escolha um Mês</InputLabel>
-                    <Select
-                        labelId="select-month-label"
-                        value={mesSelecionado}
-                        onChange={handleChangeMes}
-                        label="Escolha um Mês"
-                    >
-                        {Object.keys(vendasDiarias).map((mes, index) => (
-                            <MenuItem key={index} value={mes}>
-                                {mes}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-
-                {/* Exibindo o gráfico de barras */}
-                <Bar data={dataMensal} options={optionsMensal} />
-            </div>
+                </div>
             </DrawerAdmin>
         </Box>
     );

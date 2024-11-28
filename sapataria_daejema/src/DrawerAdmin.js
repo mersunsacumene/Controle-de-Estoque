@@ -50,12 +50,6 @@ function DrawerAdmin({ children }){
                     <ListItem button onClick={() => navigate("/cadastroFuncionario")}>
                         <ListItemText primary="Cadastrar Funcionario" />
                     </ListItem>
-                    <ListItem button>
-                        <ListItemText primary="Grafico Anual de Vendas" />
-                    </ListItem>
-                    <ListItem button>
-                        <ListItemText primary="Grafico Mensal de Vendas" />
-                    </ListItem>
                 </List>
             </Drawer>
 
