@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     TextField,
     Button,
     Typography,
     Container,
     Box,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
     ThemeProvider,
 } from "@mui/material";
 import { theme } from "./static/Utils";
 import { useBackground } from "./static/UseBackGround";
+import axios from "axios";
 
 function AdicionarPromocao() {
     useBackground("favicon2.png");
@@ -18,9 +23,28 @@ function AdicionarPromocao() {
         preco: "",
         precoComDesconto: "",
         quantidade: "",
+        produtoId: "",  // Armazenando o ID do produto escolhido
     });
 
     const [formErrors, setFormErrors] = useState({});
+    const [message, setMessage] = useState(""); // Para mostrar a mensagem de sucesso ou erro
+    const [produtos, setProdutos] = useState([]); // Lista de produtos
+    const [loading, setLoading] = useState(true); // Indicador de carregamento
+
+    useEffect(() => {
+        // Carregar os produtos do backend
+        axios
+            .get("http://localhost:5000/produtos") // Substitua pelo seu endpoint de produtos
+            .then((response) => {
+                setProdutos(response.data);  // Supondo que a resposta seja um array de produtos
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Erro ao carregar os produtos:", error);
+                setMessage("Erro ao carregar os produtos.");
+                setLoading(false);
+            });
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,15 +67,32 @@ function AdicionarPromocao() {
         e.preventDefault();
 
         const errors = {};
-        if (!formValues.nome) errors.nome = "Informe o nome do item.";
+        if (!formValues.produtoId) errors.produtoId = "Selecione o produto.";
         if (!formValues.preco) errors.preco = "Informe o preço do item.";
         if (!formValues.quantidade) errors.quantidade = "Informe a quantidade do item.";
 
         setFormErrors(errors);
 
         if (Object.keys(errors).length === 0) {
-            console.log("Formulário enviado:", formValues);
-            // Lógica para enviar os dados para o backend aqui
+            // Lógica para enviar os dados para o backend
+            axios
+                .post("http://localhost:5000/promocao/adicionar", formValues) // Substitua pelo seu endpoint real
+                .then((response) => {
+                    console.log("Produto adicionado com sucesso:", response.data);
+                    setMessage("Promoção adicionada com sucesso!");
+                    // Limpa os campos após o envio
+                    setFormValues({
+                        nome: "",
+                        preco: "",
+                        precoComDesconto: "",
+                        quantidade: "",
+                        produtoId: "",
+                    });
+                })
+                .catch((error) => {
+                    console.error("Erro ao adicionar produto:", error);
+                    setMessage("Erro ao adicionar a promoção. Tente novamente.");
+                });
         }
     };
 
@@ -84,18 +125,33 @@ function AdicionarPromocao() {
                         Adicionar Promoção
                     </Typography>
 
-                    {/* Campo Nome */}
-                    <TextField
-                        label="Produto"
-                        name="produto"
-                        fullWidth
-                        color="secondary"
-                        margin="normal"
-                        value={formValues.nome}
-                        onChange={handleChange}
-                        error={!!formErrors.nome}
-                        helperText={formErrors.nome}
-                    />
+                    {/* Campo Seleção de Produto */}
+                    <FormControl fullWidth margin="normal" error={!!formErrors.produtoId}>
+                        <InputLabel id="produto-select-label">Produto</InputLabel>
+                        <Select
+                            labelId="produto-select-label"
+                            id="produtoId"
+                            name="produtoId"
+                            value={formValues.produtoId}
+                            onChange={handleChange}
+                            label="Produto"
+                        >
+                            {loading ? (
+                                <MenuItem value="">Carregando...</MenuItem>
+                            ) : (
+                                produtos.map((produto) => (
+                                    <MenuItem key={produto.id} value={produto.id}>
+                                        {produto.nome}
+                                    </MenuItem>
+                                ))
+                            )}
+                        </Select>
+                        {formErrors.produtoId && (
+                            <Typography variant="body2" color="error">
+                                {formErrors.produtoId}
+                            </Typography>
+                        )}
+                    </FormControl>
 
                     {/* Campo Preço */}
                     <TextField
@@ -123,19 +179,17 @@ function AdicionarPromocao() {
                         disabled
                     />
 
-                    {/* Campo Quantidade */}
-                    <TextField
-                        label="Quantidade"
-                        name="quantidade"
-                        type="number"
-                        fullWidth
-                        color="secondary"
-                        margin="normal"
-                        value={formValues.quantidade}
-                        onChange={handleChange}
-                        error={!!formErrors.quantidade}
-                        helperText={formErrors.quantidade}
-                    />
+                    {/* Mensagem de Sucesso ou Erro */}
+                    {message && (
+                        <Typography
+                            variant="body1"
+                            color={message.includes("sucesso") ? "green" : "red"}
+                            align="center"
+                            sx={{ mt: 2 }}
+                        >
+                            {message}
+                        </Typography>
+                    )}
 
                     {/* Botão para Submeter */}
                     <Button

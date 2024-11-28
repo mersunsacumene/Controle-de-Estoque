@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { Box, Drawer, Card, CardContent, Typography, Button, TextField } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import { Box, Drawer, Card, CardContent, Typography, Button, TextField, MenuItem } from '@mui/material';
 import { useBackground } from "./static/UseBackGround";
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from './static/Utils';
@@ -8,11 +8,10 @@ import { CarrinhotContext } from './CarrinhoContext';
 function Carrinho() {
     useBackground('favicon2.png');
 
-    const { produtosCarrinho, removeFromCart } = useContext(CarrinhotContext);
+    const { produtosCarrinho, setProdutosCarrinho } = useContext(CarrinhotContext);
     const [drawerOpen, setDrawerOpen] = useState(true); // Drawer fixo à direita
     const [cupom, setCupom] = useState('');
     const [desconto, setDesconto] = useState(0); // Desconto em valor
-
 
     const handleCupomChange = (event) => {
         setCupom(event.target.value);
@@ -24,6 +23,15 @@ function Carrinho() {
         } else {
             setDesconto(0);
         }
+    };
+
+    // Função para alterar a quantidade do produto
+    const alterarQuantidade = (id_prod, quantidade) => {
+        setProdutosCarrinho((prev) => {
+            return prev.map(item =>
+                item.id_prod === id_prod ? { ...item, quantidade: parseInt(quantidade) } : item
+            );
+        });
     };
 
     return (
@@ -59,7 +67,7 @@ function Carrinho() {
                             Total: R${(
                             produtosCarrinho.reduce((acc, produto) => {
                                 const preco = produto.preco_unit ?? produto.valor; // Pega preco_unit se existir, caso contrário, pega valor
-                                return acc + parseFloat(preco); // Adiciona ao acumulador convertendo para número
+                                return acc + parseFloat(preco) * produto.quantidade; // Calcula o preço total de acordo com a quantidade
                             }, 0) - desconto
                         ).toFixed(2)}
                         </Typography>
@@ -110,14 +118,8 @@ function Carrinho() {
                     </Typography>
 
                     {produtosCarrinho.map((produto) => (
-                        <Card key={produto.id_prod} sx={{ marginBottom: '20px', display: 'flex' }}>
-                            <Box
-                                component="img"
-                                src={`http://localhost:5000${produto.url_img || produto.imagem}`} // Certifique-se do caminho correto
-                                alt={produto.nome_prod}
-                                sx={{ width: '150px', height: '150px', objectFit: 'cover' }}
-                            />
-                            <CardContent sx={{ flex: 1 }}>
+                        <Card key={produto.id_prod} sx={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', padding: '16px', flex: 1 }}>
                                 <Typography variant="h6">{produto.nome_prod}</Typography>
                                 <Typography variant="body2" color="textSecondary">
                                     Marca: {produto.marca_prod || 'Marca não disponível'}
@@ -125,15 +127,34 @@ function Carrinho() {
                                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
                                     R${parseFloat(produto.preco_unit || produto.valor || 0).toFixed(2)}
                                 </Typography>
+                            </Box>
+
+                            <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '16px' }}>
+                                {/* Select para alterar a quantidade */}
+                                <TextField
+                                    select
+                                    value={produto.quantidade}
+                                    onChange={(e) => alterarQuantidade(produto.id_prod, e.target.value)}
+                                    sx={{ width: '80px', marginBottom: '10px' }}
+                                    size="small"
+                                >
+                                    {[1, 2, 3, 4, 5].map((quantidade) => (
+                                        <MenuItem key={quantidade} value={quantidade}>
+                                            {quantidade}
+                                        </MenuItem>
+                                    ))}
+                                </TextField>
+
+                                {/* Botão de Remover */}
                                 <Button
                                     variant="contained"
                                     color="error"
-                                    onClick={() => removeFromCart(produto.id_prod)}
-                                    sx={{ marginTop: '10px' }}
+                                    onClick={() => removeFromCart(produto.id_prod)} // Função de remover item
+                                    sx={{ width: '100%', fontWeight: 'bold' }}
                                 >
                                     Remover
                                 </Button>
-                            </CardContent>
+                            </Box>
                         </Card>
                     ))}
                 </Box>
