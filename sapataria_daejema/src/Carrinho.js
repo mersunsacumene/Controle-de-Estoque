@@ -76,9 +76,9 @@ function Carrinho() {
 
                         <Button
                             variant="contained"
-                            color="primary"
+                            color="secondary"
                             onClick={aplicarDesconto}
-                            sx={{ marginTop: '10px' }}
+                            sx={{ marginTop: '10px', background:"#1b4d93" }}
                         >
                             Aplicar Cupom
                         </Button>

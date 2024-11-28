@@ -17,6 +17,7 @@ import AdicionarMercadoria from "./AdicionarMercadoria";
 import {CartProvider} from "./CarrinhoContext";
 import RelatorioEsgotado from "./RelatorioEsgotado";
 import RelatorioMercadoria from "./RelatorioMercadoria";
+import AdicionarPromocao from "./adicionarPromocao";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path="/relatorioMercadoria" element={<RelatorioMercadoria />} />
           <Route path="/cadastroLote" element={<CadastroLote />} />
         <Route path="/adicionarMercadoria" element={<AdicionarMercadoria />} />
+        <Route path="/adicionarPromocao" element={<AdicionarPromocao />} />
           <Route path="/cadastroNovosProdutos" element={<CadastroNovosProdutos />} />
           <Route path="/funcionario" element={<Funcionario />} />
           <Route path="/adming" element={<Admin />} />

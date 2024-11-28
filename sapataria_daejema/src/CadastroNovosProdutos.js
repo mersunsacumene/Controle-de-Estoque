@@ -191,7 +191,6 @@ function CadastroNovosProdutos() {
                         Cadastro de Mercadoria
                     </Typography>
 
-                    {/* Formulário do Produto */}
                     <TextField
                         label="Nome do Item:"
                         name="nome_prod"
@@ -278,7 +277,6 @@ function CadastroNovosProdutos() {
                         helperText={errors.quant_max}
                     />
 
-                    {/* Campo de Cor */}
                     <FormControl fullWidth margin="normal" error={!!errors.cor}>
                         <InputLabel>Cor</InputLabel>
                         <Select
@@ -293,7 +291,6 @@ function CadastroNovosProdutos() {
                         {errors.cor && <Typography variant="body2">{errors.cor}</Typography>}
                     </FormControl>
 
-                    {/* Campo de Tamanho */}
                     <FormControl fullWidth margin="normal" error={!!errors.tamanho}>
                         <InputLabel>Tamanho</InputLabel>
                         <Select
@@ -310,7 +307,6 @@ function CadastroNovosProdutos() {
                         {errors.tamanho && <Typography variant="body2">{errors.tamanho}</Typography>}
                     </FormControl>
 
-                    {/* Campo de Gênero */}
                     <FormControl fullWidth margin="normal" error={!!errors.genero}>
                         <InputLabel>Gênero</InputLabel>
                         <Select
@@ -346,7 +342,6 @@ function CadastroNovosProdutos() {
                         {errors.lote && <Typography variant="body2">{errors.lote}</Typography>}
                     </FormControl>
 
-                    {/* Campo de imagem */}
                     <input
                         type="file"
                         name="imagem"
@@ -356,7 +351,7 @@ function CadastroNovosProdutos() {
 
                     {errors.imagem && <Typography variant="body2" color="error">{errors.imagem}</Typography>}
 
-                    <Button variant="contained" color="primary" fullWidth onClick={handleSubmit}>
+                    <Button variant="contained" color="secondary" sx={{background:"#1b4d93"}} fullWidth onClick={handleSubmit}>
                         Cadastrar Produto
                     </Button>
                 </Box>

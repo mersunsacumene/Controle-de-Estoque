@@ -70,7 +70,7 @@ function Funcionario() {
         } else if (content === 'Adicionar Mercadoria') {
             setModalButtons([
                 { text: 'Adicionar Mercadoria Estoque', action: () => navigate('/adicionarMercadoria') },
-                { text: 'Adicionar Mercadoria Promoção', action: () => console.log('/adicionarMercadoria') },
+                { text: 'Adicionar Mercadoria Promoção', action: () => navigate('/adicionarPromocao') },
             ]);
         }
         setOpenModal(true);

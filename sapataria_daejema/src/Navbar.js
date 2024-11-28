@@ -1,23 +1,22 @@
 import React, { useContext, useState, useEffect } from 'react';
-import {AppBar, Toolbar, Button, Box, ThemeProvider, Typography, Badge, Modal, TextField} from '@mui/material';
-import {Link, useLocation, useNavigate} from 'react-router-dom';
+import { AppBar, Toolbar, Button, Box, ThemeProvider, Typography, Badge, Modal } from '@mui/material';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import threepng from './static/Logo (2).png';
 import { theme } from "./static/Utils";
-import { CarrinhotContext } from './CarrinhoContext'; // Importação do contexto
+import { CarrinhotContext } from './CarrinhoContext';
 import { checkAuthentication } from './authUtils';
 
 function Navbar() {
-    const { produtosCarrinho } = useContext(CarrinhotContext); // Acessando produtosCarrinho
-    const [isAuthenticated, setIsAuthenticated] = useState(() => checkAuthentication()); // Usando checkAuthentication
-    const [userRole, setUserRole] = useState(localStorage.getItem('userRole') || 'guest'); // Inicializando o papel do usuário
-    const location = useLocation(); // Para obter a rota atual
-    const [openLoginModal, setOpenLoginModal] = useState(false);
+    const { produtosCarrinho } = useContext(CarrinhotContext);
+    const [isAuthenticated, setIsAuthenticated] = useState(() => checkAuthentication());
+    const [userRole, setUserRole] = useState(localStorage.getItem('userRole') || 'guest');
+    const location = useLocation();
     const navigate = useNavigate();
+    const [openLoginModal, setOpenLoginModal] = useState(false);
     useEffect(() => {
         const handleStorageChange = () => {
             setIsAuthenticated(checkAuthentication());
-            setUserRole(localStorage.getItem('userRole') || 'guest'); // Atualiza o papel do usuário
-            console.log("Papel do usuário:", localStorage.getItem('userRole')); // Adicione este log
+            setUserRole(localStorage.getItem('userRole') || 'guest');
         };
 
         window.addEventListener('storage', handleStorageChange);
@@ -26,6 +25,20 @@ function Navbar() {
             window.removeEventListener('storage', handleStorageChange);
         };
     }, [location]);
+
+    const handleLogin = (role) => {
+        localStorage.setItem('userRole', role);
+        setUserRole(role);
+        setIsAuthenticated(true);
+
+        if (role === 'funcionario') {
+            navigate('/funcionario');
+        } else if (role === 'adming') {
+            navigate('/adming');
+        } else {
+            navigate('/');
+        }
+    };
 
     const handleOpenLoginModal = () => {
         setOpenLoginModal(true);
@@ -37,15 +50,15 @@ function Navbar() {
 
     const logout = () => {
         localStorage.removeItem('authToken');
-        localStorage.removeItem('userRole'); // Remover o papel do usuário ao deslogar
+        localStorage.removeItem('userRole');
         setIsAuthenticated(false);
         setUserRole('guest');
         window.dispatchEvent(new Event('storage'));
+        navigate('/');
     };
 
     const renderAuthButtons = () => {
         if (userRole === 'funcionario' || userRole === 'adming') {
-            // Apenas botão "Sair" para Funcionário/Admin
             return (
                 <Button color="primary" onClick={logout}>
                     <Typography variant="h6">Sair</Typography>
@@ -54,13 +67,12 @@ function Navbar() {
         }
 
         if (!isAuthenticated) {
-            // Botões "Cadastro" e "Login" apenas para usuários não autenticados
             return (
                 <Box>
-                    <Button color="primary" component={Link} to="/cadastro">
-                        <Typography variant="h8">Cadastro</Typography>
+                    <Button color="primary" onClick={()=> navigate('/cadastro')}>
+                    <Typography variant="h8">Cadastro</Typography>
                     </Button>
-                    <Button color="primary" onClick={()=>handleOpenLoginModal()}>
+                    <Button color="primary" onClick={handleOpenLoginModal}>
                         <Typography variant="h8">Login</Typography>
                     </Button>
                     <Modal
@@ -82,44 +94,43 @@ function Navbar() {
                                 borderRadius: 2,
                             }}
                         >
-                            <Button    fullWidth
-                                       variant="contained"
-                                       color="primary"
-                                       sx={{
-                                           color:"#fff",
-                                           bgcolor: '#1b4d93',
-                                           mt: 2 }}
-                                       onClick={() => {
-                                           handleCloseLoginModal();
-                                           navigate('/login');
-                                       }}
-
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    color: "#fff",
+                                    bgcolor: '#1b4d93',
+                                    mt: 2
+                                }}
+                                onClick={() => {
+                                    handleCloseLoginModal();
+                                    handleLogin('funcionario');
+                                }}
                             >
-                                Login Funcionario
+                                Login Funcionário
                             </Button>
-
                             <Button
                                 fullWidth
                                 variant="contained"
                                 sx={{
-                                    color:"#fff",
+                                    color: "#fff",
                                     bgcolor: '#1b4d93',
-                                    mt: 2 }}
+                                    mt: 2
+                                }}
                                 onClick={() => {
                                     handleCloseLoginModal();
-                                    navigate('/login');
+                                    handleLogin('usuario');
                                 }}
                             >
-                                Login Usuario
+                                Login Usuário
                             </Button>
                         </Box>
                     </Modal>
-
                 </Box>
             );
         }
 
-        // Usuários comuns autenticados
         return (
             <Box>
                 <Badge badgeContent={produtosCarrinho.length} color="error" overlap="circular" max={99}>
@@ -135,7 +146,6 @@ function Navbar() {
     };
 
     const renderLinks = () => {
-        // Exibe links apenas para usuário comum
         if (userRole === 'funcionario' || userRole === 'adming') {
             return null;
         }
@@ -148,14 +158,6 @@ function Navbar() {
         );
     };
 
-    const logoClickHandler = () => {
-        // Desativa a navegação para funcionário e admin
-        if (userRole === 'funcionario' || userRole === 'adming') {
-            return;
-        }
-        window.location.href = '/';
-    };
-
     return (
         <ThemeProvider theme={theme}>
             <AppBar position="fixed" sx={{ backgroundColor: '#1b4d93', top: 0, width: '100%', zIndex: 1201 }}>
@@ -165,7 +167,7 @@ function Navbar() {
                             src={threepng}
                             alt="Logo"
                             style={{ height: 80, cursor: 'pointer' }}
-                            onClick={logoClickHandler}
+                            onClick={() => navigate('/')}
                         />
                     </Box>
 
@@ -174,8 +176,9 @@ function Navbar() {
                 </Toolbar>
             </AppBar>
 
-            <Box sx={{ marginTop: '80px' }}>
-                {/* Conteúdo do body aqui */}
+            {/* Adiciona margem superior ao conteúdo */}
+            <Box sx={{ marginTop: '100px' }}>
+                {/* Aqui vai o conteúdo da página */}
             </Box>
         </ThemeProvider>
     );

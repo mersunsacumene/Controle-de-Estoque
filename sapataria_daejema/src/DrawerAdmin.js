@@ -16,7 +16,6 @@ function DrawerAdmin({ children }){
 
     return (
         <ThemeProvider theme={theme}>
-            {/* Menu Icon Button to open Drawer */}
             <IconButton
                 onClick={() => toggleDrawer(true)}
                 style={{
@@ -28,7 +27,6 @@ function DrawerAdmin({ children }){
                 <MenuIcon /> <label>Menu</label>
             </IconButton>
 
-            {/* Drawer */}
             <Drawer
                 anchor="left"
                 open={drawerOpen}
@@ -53,7 +51,6 @@ function DrawerAdmin({ children }){
                 </List>
             </Drawer>
 
-            {/* Main content that will change based on the route */}
             <Box sx={{ marginLeft: '280px', padding: '20px' }}>
                 {children}
             </Box>
