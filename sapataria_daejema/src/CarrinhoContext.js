@@ -7,7 +7,7 @@ export const CartProvider = ({ children }) => {
 
     const addToCart = (produto) => {
         // Verifica se o produto já existe no carrinho com base no id_prod
-        const produtoExistente = produtosCarrinho.find((item) => item.produto.id_prod === produto.produto.id_prod);
+        const produtoExistente = produtosCarrinho.find((item) => item.produto.id_prod === produto.id_prod ||produto.produto.id_prod);
 
         if (produtoExistente) {
             console.log("Produto já está no carrinho:", produto.produto.id_prod);
@@ -22,7 +22,7 @@ export const CartProvider = ({ children }) => {
         setProdutosCarrinho([]);
     };
     const removeFromCart = (id_prod) => {
-        setProdutosCarrinho((prev) => prev.filter((produto) => produto.produto.id_prod !== id_prod));
+        setProdutosCarrinho((prev) => prev.filter((produto) => produto.id_prod || produto.produto.id_prod !== id_prod));
     };
     const updateProductQuantity = (produtoId, newQuantity) => {
         setProdutosCarrinho((prev) =>

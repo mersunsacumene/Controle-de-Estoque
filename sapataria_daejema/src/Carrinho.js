@@ -57,15 +57,15 @@ function Carrinho() {
 
     const finalizarCompra = async () => {
         const valorTotal = produtosCarrinho.reduce((acc, produto) => {
-            const preco = produto.produto.preco_unit ?? produto.produto.valor;
-            return acc + parseFloat(preco) * produto.quantidade;
+            const preco = produto.valor || produto.produto.preco_unit;
+            return acc + parseFloat(preco) * quantidadeTemp[produto.id_prod || produto.produto.id_prod] || produto.quantidade;
         }, 0) - desconto;
 
         try {
             for (const produto of produtosCarrinho) {
                 // Verifica se existe uma quantidade temporária e usa ela, senão usa a quantidade original
-                const quantidade = quantidadeTemp[produto.produto.id_prod] !== undefined
-                    ? quantidadeTemp[produto.produto.id_prod]
+                const quantidade = quantidadeTemp[produto.id_prod ||produto.produto.id_prod] !== undefined
+                    ? quantidadeTemp[produto.id_prod || produto.produto.id_prod]
                     : produto.quantidade;
 
                 // Enviando o pedido de criação de pedido
@@ -146,7 +146,7 @@ function Carrinho() {
                             Total: R${(
                             produtosCarrinho.reduce((acc, produto) => {
                                 const preco = produto.valor ?? produto.produto.preco_unit ;
-                                return acc + parseFloat(preco) * produto.quantidade;
+                                return acc + parseFloat(preco) * quantidadeTemp[produto.id_prod || produto.produto.id_prod];
                             }, 0) - desconto
                         ).toFixed(2)}
                         </Typography>
@@ -198,7 +198,7 @@ function Carrinho() {
 
                     {produtosCarrinho.map((produto) => {
                         return (
-                            <Card key={produto.produto.id_prod} sx={{ marginBottom: '20px', display: 'flex' }}>
+                            <Card key={produto.id_prod || produto.produto.id_prod} sx={{ marginBottom: '20px', display: 'flex' }}>
                                 <Box
                                     component="img"
                                     src={`http://localhost:5000${ produto.imagem ||produto.produto.url_img}`}
@@ -206,20 +206,21 @@ function Carrinho() {
                                     sx={{ width: '150px', height: '150px', objectFit: 'cover' }}
                                 />
                                 <CardContent sx={{ flex: 1 }}>
-                                    <Typography variant="h6">{ produto.nome_prod || produto.produto.nome_prod }</Typography>
+                                    <Typography variant="h6">{ produto.nome || produto.nome_prod }</Typography>
                                     <Typography variant="body2" color="textSecondary">
-                                        Marca: {produto.produto.marca_prod || 'Marca não disponível'}
+                                        Marca: { produto.marca_prod || produto.produto.marca_prod || 'Marca não disponível'}
                                     </Typography>
+                                    <Typography variant="h6">Quantidade atual: { produto.quantidade || produto.produto.quantidade }</Typography>
                                     <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                                        R${parseFloat(produto.produto.preco_unit || produto.produto.valor || 0).toFixed(2)}
+                                        R${parseFloat( produto.valor || produto.produto.preco_unit || 0).toFixed(2)}
                                     </Typography>
 
                                     <Box sx={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
                                         <TextField
                                             type="number"
                                             label="Quantidade"
-                                            value={quantidadeTemp[produto.produto.id_prod] !== undefined ? quantidadeTemp[produto.produto.id_prod] : produto.quantidade}
-                                            onChange={(event) => handleQuantityChange(event, produto.produto.id_prod, produto.quantidade)}
+                                            value={quantidadeTemp[produto.id_prod || produto.produto.id_prod] !== undefined ? quantidadeTemp[produto.id_prod || produto.produto.id_prod] : produto.quantidade}
+                                            onChange={(event) => handleQuantityChange(event, produto.id_prod || produto.produto.id_prod, produto.quantidade)}
                                             sx={{ width: '70px', marginRight: '10px' }}
                                         />
                                     </Box>
@@ -227,7 +228,7 @@ function Carrinho() {
                                     <Button
                                         variant="contained"
                                         color="error"
-                                        onClick={() => removeFromCart(produto.produto.id_prod)}
+                                        onClick={() => removeFromCart(produto.id_prod || produto.produto.id_prod)}
                                         sx={{ marginTop: '10px' }}
                                     >
                                         Remover

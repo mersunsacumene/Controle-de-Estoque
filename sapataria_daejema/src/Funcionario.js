@@ -65,8 +65,7 @@ function Funcionario() {
             ]);
         } else if (content === 'Relatórios') {
             setModalButtons([
-                { text: 'Relatórios de Mercadoria Mais Vendidos', action: () => console.log('Relatórios de Mercadoria Mais Vendidos') },
-                { text: 'Mercadoria Esgotando', action: () => console.log('Mercadoria Esgotando') },
+                { text: 'Relatório de Mercadorias Mais Vendidas', action: () =>  navigate('/RelatorioMercadoria') },
             ]);
         } else if (content === 'Adicionar Mercadoria') {
             setModalButtons([

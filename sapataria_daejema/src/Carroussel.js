@@ -32,8 +32,13 @@ function Carroussel() {
                 const promocoes = response.data.promocoesComItens.map(item => ({
                     evento: 'Promoção',
                     nome: item.produto.nome_prod,
+                    marca_prod: item.produto.marca_prod,
+                    id_prod: item.produto.id_prod,
                     valor: item.promocao.valor,
                     imagem: item.produto.url_img,
+                    quantidade: item.estoque.quant_atual,
+                    id_estoque: item.estoque.id_estoque,
+                    data_fim: item.promocao.data_fim
                 }));
                 setProdutos(promocoes);
             })
@@ -83,8 +88,11 @@ function ProdutoGrid({ produtos, isAuthenticated }) {
                         <CardContent>
                             <Typography>{produto.evento}</Typography>
                             <img src={`http://localhost:5000${produto.imagem}`} alt={produto.nome} />
+                            <Typography>{produto.marca_prod}</Typography>
                             <Typography>{produto.nome}</Typography>
                             <Typography>{produto.valor}</Typography>
+                            <Typography>{produto.quantidade}</Typography>
+                            <Typography>{new Date(produto.data_fim).toLocaleDateString("pt-BR", { month: "long", day: "2-digit" })}</Typography>
                             <Button onClick={() => handleAddToCart(produto)}>
                                 Comprar
                             </Button>

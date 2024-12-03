@@ -129,8 +129,12 @@ function Produtos() {
                                         {produto.produto.nome_prod}
                                     </Typography>
                                     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
+                                        Marca: {produto.produto.marca_prod}
+                                    </Typography>
+                                    <Typography variant="h5" style={{ fontWeight: 'bold' }}>
                                         Valor Unitário: R${produto.produto.preco_unit}
                                     </Typography>
+
                                     <Typography variant="h6">
                                         Quantidade em Estoque: {produto.quantidade}
                                     </Typography>

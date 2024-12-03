@@ -28,21 +28,6 @@ function Navbar() {
         };
     }, [location]);
 
-    const handleLogin = (role) => {
-        localStorage.setItem('userRole', role);
-        setUserRole(role);
-        setIsAuthenticated(true);
-
-        if (role === 'funcionario') {
-            navigate('/login');
-        } else if (role === 'adming') {
-            navigate('/adming');
-        } else {
-            navigate('/');
-        }
-        handleCloseLoginModal();
-    };
-
     const handleOpenLoginModal = () => {
         setOpenLoginModal(true);
     };
@@ -108,7 +93,7 @@ function Navbar() {
                                 }}
                                 onClick={() => {
                                     handleCloseLoginModal();
-                                    handleLogin('funcionario');
+                                    navigate('/login')
                                 }}
                             >
                                 Login Funcionário
@@ -123,7 +108,7 @@ function Navbar() {
                                 }}
                                 onClick={() => {
                                     handleCloseLoginModal();
-                                    handleLogin('usuario');
+                                    navigate('/login')
                                 }}
                             >
                                 Login Usuário

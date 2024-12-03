@@ -6,6 +6,7 @@ import {useBackground} from "./static/UseBackGround";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import axios from "axios";
 
+
 function Login() {
   useBackground('favicon2.png');
   const [formValues, setFormValues] = useState({
@@ -62,9 +63,9 @@ function Login() {
         if (response.data.role === 'funcionario') {
           navigate('/funcionario');
         } else if (response.data.role === 'adming') {
-          navigate('/adming');
+          navigate('adming')
         } else {
-          navigate('/');
+          navigate('/')
         }
       } catch (error) {
         console.log('Erro', error.message, error.response);

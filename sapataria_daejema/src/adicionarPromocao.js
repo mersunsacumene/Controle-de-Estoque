@@ -21,22 +21,23 @@ function AdicionarPromocao() {
     const [formValues, setFormValues] = useState({
         nome: "",
         preco: "",
-        precoComDesconto: "",
-        quantidade: "",
-        produtoId: "",  // Armazenando o ID do produto escolhido
+        valor: "",
+        id_prod: "",
+        data_fim: "",
     });
 
     const [formErrors, setFormErrors] = useState({});
-    const [message, setMessage] = useState(""); // Para mostrar a mensagem de sucesso ou erro
-    const [produtos, setProdutos] = useState([]); // Lista de produtos
-    const [loading, setLoading] = useState(true); // Indicador de carregamento
+    const [message, setMessage] = useState("");
+    const [produtos, setProdutos] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         // Carregar os produtos do backend
         axios
-            .get("http://localhost:5000/produtos") // Substitua pelo seu endpoint de produtos
+            .get("http://localhost:5000/estoque/produtosEstoque")
             .then((response) => {
-                setProdutos(response.data);  // Supondo que a resposta seja um array de produtos
+                setProdutos(response.data);
+                console.log("Produtos carregados:", response.data);
                 setLoading(false);
             })
             .catch((error) => {
@@ -52,11 +53,19 @@ function AdicionarPromocao() {
         setFormValues((prevValues) => {
             const updatedValues = { ...prevValues, [name]: value };
 
-            // Calcula o preço com desconto se o preço for atualizado
-            if (name === "preco" && value) {
-                const desconto = 0.2; // 20% de desconto
-                const precoComDesconto = (value * (1 - desconto)).toFixed(2);
-                updatedValues.precoComDesconto = precoComDesconto;
+            if (name === "id_prod" && value) {
+                const selectedProduct = produtos.find(
+                    (produto) => produto.produto.id_prod === value
+                );
+
+                if (selectedProduct) {
+                    updatedValues.preco = selectedProduct.produto.preco_unit;
+
+                    const desconto = 0.2;
+                    updatedValues.valor = (
+                        selectedProduct.produto.preco_unit * (1 - desconto)
+                    ).toFixed(2);
+                }
             }
 
             return updatedValues;
@@ -67,30 +76,26 @@ function AdicionarPromocao() {
         e.preventDefault();
 
         const errors = {};
-        if (!formValues.produtoId) errors.produtoId = "Selecione o produto.";
+        if (!formValues.id_prod) errors.id_prod = "Selecione o produto.";
         if (!formValues.preco) errors.preco = "Informe o preço do item.";
-        if (!formValues.quantidade) errors.quantidade = "Informe a quantidade do item.";
+        if (!formValues.data_fim) errors.data_fim = "Informe a data final da promoção.";
 
         setFormErrors(errors);
 
         if (Object.keys(errors).length === 0) {
-            // Lógica para enviar os dados para o backend
             axios
-                .post("http://localhost:5000/promocao/adicionar", formValues) // Substitua pelo seu endpoint real
+                .post("http://localhost:5000/promocao/cadastro", formValues)
                 .then((response) => {
-                    console.log("Produto adicionado com sucesso:", response.data);
+                    console.log("Promoção adicionada com sucesso:", response.data);
                     setMessage("Promoção adicionada com sucesso!");
-                    // Limpa os campos após o envio
                     setFormValues({
-                        nome: "",
-                        preco: "",
-                        precoComDesconto: "",
-                        quantidade: "",
-                        produtoId: "",
+                        valor: "",
+                        id_prod: "",
+                        data_fim: "",
                     });
                 })
                 .catch((error) => {
-                    console.error("Erro ao adicionar produto:", error);
+                    console.error("Erro ao adicionar promoção:", error, formValues["valor"]);
                     setMessage("Erro ao adicionar a promoção. Tente novamente.");
                 });
         }
@@ -125,14 +130,13 @@ function AdicionarPromocao() {
                         Adicionar Promoção
                     </Typography>
 
-                    {/* Campo Seleção de Produto */}
-                    <FormControl fullWidth margin="normal" error={!!formErrors.produtoId}>
+                    <FormControl fullWidth margin="normal" error={!!formErrors.id_prod}>
                         <InputLabel id="produto-select-label">Produto</InputLabel>
                         <Select
                             labelId="produto-select-label"
-                            id="produtoId"
-                            name="produtoId"
-                            value={formValues.produtoId}
+                            id="id_prod"
+                            name="id_prod"
+                            value={formValues.id_prod}
                             onChange={handleChange}
                             label="Produto"
                         >
@@ -140,20 +144,19 @@ function AdicionarPromocao() {
                                 <MenuItem value="">Carregando...</MenuItem>
                             ) : (
                                 produtos.map((produto) => (
-                                    <MenuItem key={produto.id} value={produto.id}>
-                                        {produto.nome}
+                                    <MenuItem key={produto.produto.id_prod} value={produto.produto.id_prod}>
+                                        {produto.produto.nome_prod}
                                     </MenuItem>
                                 ))
                             )}
                         </Select>
-                        {formErrors.produtoId && (
+                        {formErrors.id_prod && (
                             <Typography variant="body2" color="error">
-                                {formErrors.produtoId}
+                                {formErrors.id_prod}
                             </Typography>
                         )}
                     </FormControl>
 
-                    {/* Campo Preço */}
                     <TextField
                         label="Preço do Item (R$)"
                         name="preco"
@@ -165,21 +168,34 @@ function AdicionarPromocao() {
                         onChange={handleChange}
                         error={!!formErrors.preco}
                         helperText={formErrors.preco}
+                        disabled
                     />
 
-                    {/* Campo Preço com Desconto */}
                     <TextField
                         label="Preço com 20% de Desconto (R$)"
-                        name="precoComDesconto"
+                        name="valor"
                         type="text"
                         fullWidth
                         color="secondary"
                         margin="normal"
-                        value={formValues.precoComDesconto}
+                        value={formValues.valor}
                         disabled
                     />
 
-                    {/* Mensagem de Sucesso ou Erro */}
+                    <TextField
+                        label="Data Final da Promoção"
+                        name="data_fim"
+                        type="date"
+                        fullWidth
+                        color="secondary"
+                        margin="normal"
+                        value={formValues.data_fim}
+                        onChange={handleChange}
+                        error={!!formErrors.data_fim}
+                        helperText={formErrors.data_fim}
+                        InputLabelProps={{ shrink: true }}
+                    />
+
                     {message && (
                         <Typography
                             variant="body1"
@@ -191,7 +207,6 @@ function AdicionarPromocao() {
                         </Typography>
                     )}
 
-                    {/* Botão para Submeter */}
                     <Button
                         type="submit"
                         variant="contained"
