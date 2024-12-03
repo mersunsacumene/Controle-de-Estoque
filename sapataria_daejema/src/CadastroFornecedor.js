@@ -86,6 +86,7 @@ function CadastroNovosProdutos() {
                         margin="normal"
                         value={formData.cnpj}
                         onChange={handleChange}
+                        maxLength="14"
                         error={!!errors.cnpj}
                         helperText={errors.cnpj}
                     />

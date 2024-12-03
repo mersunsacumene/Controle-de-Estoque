@@ -12,7 +12,6 @@ function Navbar() {
     const [userRole, setUserRole] = useState(localStorage.getItem('userRole') || 'guest');
     const location = useLocation();
     const navigate = useNavigate();
-    const [openLoginModal, setOpenLoginModal] = useState(false);
 
 
     useEffect(() => {
@@ -28,13 +27,6 @@ function Navbar() {
         };
     }, [location]);
 
-    const handleOpenLoginModal = () => {
-        setOpenLoginModal(true);
-    };
-
-    const handleCloseLoginModal = () => {
-        setOpenLoginModal(false);
-    };
 
     const logout = () => {
         localStorage.removeItem('authToken');
@@ -60,61 +52,9 @@ function Navbar() {
                     <Button color="primary" onClick={()=> navigate('/cadastro')}>
                     <Typography variant="h8">Cadastro</Typography>
                     </Button>
-                    <Button color="primary" onClick={handleOpenLoginModal}>
+                    <Button color="primary" onClick={()=> navigate('/login')}>
                         <Typography variant="h8">Login</Typography>
                     </Button>
-                    <Modal
-                        open={openLoginModal}
-                        onClose={handleCloseLoginModal}
-                        aria-labelledby="login-modal-title"
-                        aria-describedby="login-modal-description"
-                    >
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                top: '50%',
-                                left: '50%',
-                                transform: 'translate(-50%, -50%)',
-                                width: 400,
-                                bgcolor: '#fff',
-                                boxShadow: 24,
-                                p: 4,
-                                borderRadius: 2,
-                            }}
-                        >
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    color: "#fff",
-                                    bgcolor: '#1b4d93',
-                                    mt: 2
-                                }}
-                                onClick={() => {
-                                    handleCloseLoginModal();
-                                    navigate('/login')
-                                }}
-                            >
-                                Login Funcionário
-                            </Button>
-                            <Button
-                                fullWidth
-                                variant="contained"
-                                sx={{
-                                    color: "#fff",
-                                    bgcolor: '#1b4d93',
-                                    mt: 2
-                                }}
-                                onClick={() => {
-                                    handleCloseLoginModal();
-                                    navigate('/login')
-                                }}
-                            >
-                                Login Usuário
-                            </Button>
-                        </Box>
-                    </Modal>
                 </Box>
             );
         }
@@ -164,9 +104,7 @@ function Navbar() {
                 </Toolbar>
             </AppBar>
 
-            {/* Adiciona margem superior ao conteúdo */}
             <Box sx={{ marginTop: '100px' }}>
-                {/* Aqui vai o conteúdo da página */}
             </Box>
         </ThemeProvider>
     );

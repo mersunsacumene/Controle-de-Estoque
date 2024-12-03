@@ -124,19 +124,19 @@ function Produtos() {
                                 borderRadius: '24px',
                             }}>
                                 <CardContent style={{ textAlign: 'center' }}>
-                                    <Typography component="img" src={`http://localhost:5000${produto.produto.url_img}`} alt={produto.produto.nome_prod} sx={{ width: '100%', objectFit: 'cover' }} />
+                                    <Typography component="img" src={`http://localhost:5000${ produto.url_img ||produto.produto.url_img || produto.imagem}`} alt={produto.nome_prod || produto.nome ||  produto.produto.nome_prod} sx={{ width: '225px', height: '225px', objectFit: 'cover' }} />
                                     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                        {produto.produto.nome_prod}
+                                        {produto.nome_prod || produto.produto.nome_prod}
                                     </Typography>
                                     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                        Marca: {produto.produto.marca_prod}
+                                        Marca: {produto.marca_prod || produto.produto.marca_prod}
                                     </Typography>
                                     <Typography variant="h5" style={{ fontWeight: 'bold' }}>
-                                        Valor Unitário: R${produto.produto.preco_unit}
+                                        Valor Unitário: R${produto.preco_unit || produto.produto.preco_unit}
                                     </Typography>
 
                                     <Typography variant="h6">
-                                        Quantidade em Estoque: {produto.quantidade}
+                                        Quantidade em Estoque: {produto.quantidade || produto.quantidade}
                                     </Typography>
                                     <Button
                                         style={{

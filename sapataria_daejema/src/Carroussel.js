@@ -85,14 +85,21 @@ function ProdutoGrid({ produtos, isAuthenticated }) {
             {produtos.map((produto, index) => (
                 <Grid item xs={3} key={index}>
                     <Card>
-                        <CardContent>
+                        <CardContent sx={{ textAlign: "center" }}>
                             <Typography>{produto.evento}</Typography>
-                            <img src={`http://localhost:5000${produto.imagem}`} alt={produto.nome} />
+                            <img
+                                src={`http://localhost:5000${produto.imagem}`}
+                                alt={produto.nome}
+                                style={{width: '225px', height: '225px', objectFit: 'cover'}}
+                            />
+
                             <Typography>{produto.marca_prod}</Typography>
                             <Typography>{produto.nome}</Typography>
                             <Typography>{produto.valor}</Typography>
-                            <Typography>{produto.quantidade}</Typography>
-                            <Typography>{new Date(produto.data_fim).toLocaleDateString("pt-BR", { month: "long", day: "2-digit" })}</Typography>
+                            <Typography>{new Date(produto.data_fim).toLocaleDateString("pt-BR", {
+                                month: "long",
+                                day: "2-digit"
+                            })}</Typography>
                             <Button onClick={() => handleAddToCart(produto)}>
                                 Comprar
                             </Button>
