@@ -14,10 +14,11 @@ import {
 import { theme } from "./static/Utils";
 import { useBackground } from "./static/UseBackGround";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function CadastroNovosProdutos() {
     useBackground("favicon2.png");
-
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         nome_prod: "",
         marca_prod: "",
@@ -147,6 +148,7 @@ function CadastroNovosProdutos() {
 
                     if (estoqueResponse.status === 201) {
                         alert("Produto e Estoque cadastrados com sucesso!");
+                        navigate('/funcionario')
                     } else {
                         alert("Erro ao cadastrar estoque.");
                     }

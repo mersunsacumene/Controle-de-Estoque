@@ -14,10 +14,11 @@ import {
 import { theme } from "./static/Utils";
 import { useBackground } from "./static/UseBackGround";
 import axios from "axios";
+import {useNavigate} from 'react-router-dom';
 
 function AdicionarPromocao() {
     useBackground("favicon2.png");
-
+    const navigate = useNavigate();
     const [formValues, setFormValues] = useState({
         nome: "",
         preco: "",
@@ -93,6 +94,9 @@ function AdicionarPromocao() {
                         id_prod: "",
                         data_fim: "",
                     });
+                    setTimeout(() => {
+                        navigate('/funcionario');
+                    }, 2000); // 2000 ms = 2 segundos
                 })
                 .catch((error) => {
                     console.error("Erro ao adicionar promoção:", error, formValues["valor"]);

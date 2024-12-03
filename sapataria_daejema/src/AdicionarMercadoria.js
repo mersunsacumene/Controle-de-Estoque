@@ -15,10 +15,11 @@ import {
 } from "@mui/material";
 import { theme } from "./static/Utils";
 import { useBackground } from "./static/UseBackGround";
+import {useNavigate} from 'react-router-dom'
 
 function AdicionarMercadoria() {
     useBackground("favicon2.png");
-
+    const navigate = useNavigate();
     const [formValues, setFormValues] = useState({
         produtoId: "",
         quantidade: "",
@@ -117,6 +118,9 @@ function AdicionarMercadoria() {
                         setSnackbarMessage("Mercadoria adicionada com sucesso!");
                         setSnackbarSeverity("success");
                         setOpenSnackbar(true);
+                        setTimeout(() => {
+                            navigate('/funcionario');
+                        }, 2000);
                     } else {
                         console.error("Erro ao registrar movimentação de entrada:", entradaData.error);
                         setSnackbarMessage("Erro ao registrar movimentação de entrada.");

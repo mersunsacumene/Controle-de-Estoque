@@ -48,6 +48,9 @@ function DrawerAdmin({ children }){
                     <ListItem button onClick={() => navigate("/cadastroFuncionario")}>
                         <ListItemText primary="Cadastrar Funcionario" />
                     </ListItem>
+                    <ListItem button onClick={() => navigate('/analisePromocoes')}>
+                        <ListItemText primary="Analisar Promocções" />
+                    </ListItem>
                 </List>
             </Drawer>
 

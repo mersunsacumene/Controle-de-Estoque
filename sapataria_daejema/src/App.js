@@ -17,6 +17,7 @@ import AdicionarMercadoria from "./AdicionarMercadoria";
 import {CartProvider} from "./CarrinhoContext";
 import RelatorioMercadoria from "./RelatorioMercadoria";
 import AdicionarPromocao from "./adicionarPromocao";
+import AnalisePromocoes from "./analisePromocoes";
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route path="/cadastroNovosProdutos" element={<CadastroNovosProdutos />} />
           <Route path="/funcionario" element={<Funcionario />} />
           <Route path="/adming" element={<Admin />} />
+        <Route path="/analisePromocoes" element={<AnalisePromocoes/>}/>
         <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
